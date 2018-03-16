@@ -2,16 +2,19 @@ version: '2.1'
 
 services:
   client:
+    image: client 
     build: client
+    restart: always
     ports:
       - "4200:80"
   server:
+    image: server
     build: server
-    environment:
-       PORT : 8080
+    # environment:
+    #    PORT : 8080
     restart: always
     ports:
-      - 8080:8080
+       - 8080:8080
     # links:
     #     - mongodb
     # depends_on:
