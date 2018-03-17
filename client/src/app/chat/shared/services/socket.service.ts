@@ -14,12 +14,6 @@ export class SocketService {
     public initSocket(): void {
 
         this.socket = socketIo();
-        this.socket.on("error", (err) => {
-            console.log('Error on socket', err);
-        })
-        this.socket.on('connect_error', function (err) {
-            console.log('Error connecting to server', err);
-        });
 
         console.log(this.socket);
 
