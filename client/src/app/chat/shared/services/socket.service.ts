@@ -6,14 +6,24 @@ import { Event } from '../model/event';
 
 import * as socketIo from 'socket.io-client';
 
-const SERVER_URL = 'server:8080';
 
 @Injectable()
 export class SocketService {
     private socket;
 
     public initSocket(): void {
-        this.socket = socketIo(SERVER_URL);
+
+        this.socket = socketIo();
+        this.socket.on("error", (err) => {
+            console.log('Error on socket', err);
+        })
+        this.socket.on('connect_error', function (err) {
+            console.log('Error connecting to server', err);
+        });
+
+        console.log(this.socket);
+
+
     }
 
     public send(message: Message): void {

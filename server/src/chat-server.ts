@@ -21,6 +21,10 @@ export class ChatServer {
 
     private createApp(): void {
         this.app = express();
+        this.app.get("/",(err,res,next)=>{
+            res.json("here i am")
+
+        })
     }
 
     private createServer(): void {
@@ -40,6 +44,10 @@ export class ChatServer {
             console.log('Running server on port %s', this.port);
         });
 
+        this.io.on('connect_error', function(err) {
+            // handle server error here
+            console.log('Error connecting to server');
+          });
         this.io.on('connect', (socket: any) => {
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: Message) => {

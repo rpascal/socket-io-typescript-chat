@@ -5,6 +5,8 @@ services:
     image: client 
     build: client
     restart: always
+    links:
+      - server
     ports:
       - "4200:80"
   server:
