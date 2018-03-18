@@ -2,8 +2,10 @@ FROM node:9.8.0
 
 WORKDIR /server
 COPY ["package*.json", "./"]
-RUN npm cache clean --force & npm i
+RUN npm cache clean --force 
+RUN npm i
 COPY . .
-RUN npm install -g gulp-cli & gulp build
+RUN npm install -g gulp-cli 
+RUN gulp build
 
 CMD npm start

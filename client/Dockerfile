@@ -2,11 +2,15 @@ FROM node:9.8.0 as builder
 
 COPY package.json package-lock.json ./
 
-RUN npm set progress=false & npm config set depth 0 & npm cache clean --force
+RUN npm set progress=false 
+RUN npm config set depth 0 
+RUN npm cache clean --force
 
 
 ## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
-RUN npm i & mkdir /ng-app & cp -R ./node_modules ./ng-app
+RUN npm i 
+RUN  mkdir /ng-app 
+RUN  cp -R ./node_modules ./ng-app
 
 
 WORKDIR /ng-app
