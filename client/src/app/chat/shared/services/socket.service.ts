@@ -4,7 +4,7 @@ import { Observer } from 'rxjs/Observer';
 import { Message } from '../model/message';
 import { Event } from '../model/event';
 
-import * as socketIo from 'socket.io-client';
+import { connect } from 'socket.io-client';
 
 
 @Injectable()
@@ -12,12 +12,7 @@ export class SocketService {
     private socket;
 
     public initSocket(): void {
-
-        this.socket = socketIo();
-
-        console.log(this.socket);
-
-
+        this.socket = connect();
     }
 
     public send(message: Message): void {
