@@ -76,8 +76,23 @@ export class ChatComponent implements OnInit, AfterViewInit {
   private initIoConnection(): void {
     this.socketService.initSocket();
 
+    // this.socketService.onEvent(Event.DataLoaded)
+    // .subscribe((message: Message) => {
+    //   console.log("On DataLoaded");
+    //   this.messages.push(message);
+    // });
+
+    this.socketService.currentMessages()
+      .subscribe((message: Message[]) => {
+        console.log("currentMessages looping", message);
+        message.forEach(item => {
+          this.messages.push(item);
+        })
+      });
+
     this.ioConnection = this.socketService.onMessage()
       .subscribe((message: Message) => {
+        console.log("On Message");
         this.messages.push(message);
       });
 

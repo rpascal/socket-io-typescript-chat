@@ -9,6 +9,8 @@ services:
       - server
     ports:
       - "4200:80"
+    depends_on:
+      - server
   server:
     image: server
     build: server
@@ -16,4 +18,14 @@ services:
        PORT : 8080
     restart: always
     ports:
-       - 8080:8080 
+      - 8080:8080
+    links:
+      - redis
+    depends_on:
+      - redis 
+  redis:
+    image: redis
+    volumes:
+      - ./data:/data
+    ports:
+      - 6379
