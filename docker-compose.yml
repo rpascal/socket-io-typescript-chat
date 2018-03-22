@@ -20,12 +20,18 @@ services:
     ports:
       - 8080:8080
     links:
-      - redis
+      - mongo
     depends_on:
-      - redis 
-  redis:
-    image: redis
-    volumes:
-      - ./data:/data
+      - mongo 
+  # redis:
+  #   image: redis
+  #   volumes:
+  #     - ./data:/data
+  #   ports:
+  #     - 6379
+  mongo:
+    image: mongo
     ports:
-      - 6379
+      - 27017:27017
+    volumes:
+      - ./data/mongodb/db:/data/db

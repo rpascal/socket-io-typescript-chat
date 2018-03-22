@@ -1,7 +1,9 @@
 {
   "files": [
     "src/*.ts",
-    "src/model/*.ts"
+    "src/model/*.ts",
+    "src/mongoose/*.ts",
+    "src/mongoose/models/*.ts"
   ],
   "compilerOptions": {
     "noImplicitAny": true,
