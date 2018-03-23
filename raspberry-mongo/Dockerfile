@@ -3,12 +3,9 @@ FROM ubuntu:xenial
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mongodb && useradd -r -g mongodb mongodb
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    jq \
-    numactl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends ca-certificates jq  numactl 
+RUN rm -rf /var/lib/apt/lists/*
 
 # grab gosu for easy step-down from root
 ENV GOSU_VERSION 1.10
