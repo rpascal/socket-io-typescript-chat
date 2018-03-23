@@ -50,8 +50,20 @@ export class ChatServer {
     private createApp(): void {
         this.app = express();
         this.app.get("/", (err, res, next) => {
-            res.json("here i am")
-
+            
+            ChatRoom.add({ roomName: "Custom Test 222!!" });
+            ChatRoom.getAll().then(val => {
+               
+                if (val) {
+                    res.json(val)
+                    console.log("Rooms: ", val)
+                } else {
+                    res.json("no rooms")
+                    console.log("Nothing in rooms")
+                }
+            }).catch(err=>{
+                res.json("err catch")
+            })
         })
     }
 

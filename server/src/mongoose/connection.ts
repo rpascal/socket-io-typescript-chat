@@ -13,7 +13,10 @@ export class MongooseInit {
 
 
     public connect() {
-        mongoConnect("mongodb://mongo:27017")
+        mongoConnect("mongodb://mongodb:27017", {
+//admin:password@
+// /db
+        })
         console.log("After connect")
         // , {
         //     db: { safe: true }
