@@ -3,7 +3,9 @@
     "src/*.ts",
     "src/model/*.ts",
     "src/mongoose/*.ts",
-    "src/mongoose/models/*.ts"
+    "src/mongoose/models/*.ts",
+    "src/cassandra/*.ts",
+    "src/cassandra/models/*.ts"
   ],
   "compilerOptions": {
     "noImplicitAny": true,

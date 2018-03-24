@@ -20,13 +20,41 @@ services:
     ports:
       - 8080:8080
     links:
-      - mongodb
+      - cassandra
+    # depends_on:
+    #   - cassandra 
     depends_on:
-      - mongodb 
+      cassandra:
+        condition: service_healthy
 
-  mongodb:
-    image: raspberry-mongo
-    build: raspberry-mongo
+  cassandra:
+    build: cassandra
+    restart: always
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+      - ./cassandra/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # cassandra:
+  #   image: cassandra:2.1.20
+  #   restart: always
+  #   volumes:
+  #     - ./data/cassandra:/var/lib/cassandra
+  #     - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5      
+
+
+  # mongodb:
+  #   image: raspberry-mongo
+  #   build: raspberry-mongo
 
   # redis:
   #   image: redis

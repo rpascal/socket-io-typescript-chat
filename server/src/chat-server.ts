@@ -7,6 +7,10 @@ import { Message, User } from './model';
 import { MongooseInit } from './mongoose/connection'
 import { ChatRoom } from './mongoose/models/chatRoom'
 
+import { Client } from "cassandra-driver"
+
+// const cassandra = require('cassandra-driver');
+// const client = new cassandra.Client({ contactPoints: ['h1', 'h2'], keyspace: 'ks1' });
 
 export class ChatServer {
     public static readonly PORT: number = 8080;
@@ -17,12 +21,39 @@ export class ChatServer {
 
     constructor(public MongooseInit: MongooseInit) {
         console.log("Heello")
-        MongooseInit.connect();
+        // MongooseInit.connect();
 
         console.log("Heello 2")
 
-        ChatRoom.add({ roomName: "Custom Test!!" });
-        ChatRoom.add({ roomName: "Custom Test 222!!" });
+        const client = new Client({ contactPoints: ["cassandra"], keyspace: "demo" });
+
+        // client.connect().then(() => {
+        //     console.log("connected");
+
+        // }).catch((reason) => {
+        //     console.log("Sad panda: ", reason);
+        // })
+
+
+        const query = 'INSERT INTO users (userid, first_name, last_name) VALUES (now(), ?, ?)';
+        client.execute(query, ['someone', 'gess'])
+            .then(result => console.log('User with email %s', result.rows)).catch((reason) => {
+                console.log("Sad panda inserting 1: ", reason);
+            })
+
+        // const query = 'INSERT INTO users (userid, first_name, last_name) VALUES (now(), ?, ?)';
+        client.execute(query, ['ryan', 'pascal'])
+            .then(result => console.log('User with email %s', result.rows)).catch((reason) => {
+                console.log("Sad panda inserting 2: ", reason);
+            })
+
+        // query: 'INSERT INTO user_track (key, text, date) VALUES (now(), ?, ?)',
+        // params: [ 'hendrix', 'Changed email', new Date() ]
+
+
+
+        // ChatRoom.add({ roomName: "Custom Test!!" });
+        // ChatRoom.add({ roomName: "Custom Test 222!!" });
 
         // var room = new ChatRoom();
         // room.roomName = "This is test";
@@ -32,13 +63,13 @@ export class ChatServer {
         // room2.roomName = "This is test - 2";
         // room2.save();
 
-        ChatRoom.getAll().then(val => {
-            if (val) {
-                console.log("Rooms: ", val)
-            } else {
-                console.log("Nothing in rooms")
-            }
-        })
+        // ChatRoom.getAll().then(val => {
+        //     if (val) {
+        //         console.log("Rooms: ", val)
+        //     } else {
+        //         console.log("Nothing in rooms")
+        //     }
+        // })
 
         this.createApp();
         this.config();
@@ -50,20 +81,33 @@ export class ChatServer {
     private createApp(): void {
         this.app = express();
         this.app.get("/", (err, res, next) => {
-            
-            ChatRoom.add({ roomName: "Custom Test 222!!" });
-            ChatRoom.getAll().then(val => {
-               
-                if (val) {
-                    res.json(val)
-                    console.log("Rooms: ", val)
-                } else {
-                    res.json("no rooms")
-                    console.log("Nothing in rooms")
-                }
-            }).catch(err=>{
-                res.json("err catch")
-            })
+
+
+            const client = new Client({ contactPoints: ["cassandra"], keyspace: "demo" });
+
+            const query = 'SELECT * FROM users';
+            client.execute(query)
+                .then(result => console.log(result.rows));
+
+
+            // client.connect().then(() => {
+            //     console.log("connected");
+            // }).catch((reason) => {
+            //     console.log("Sad panda: ", reason);
+            // })
+            // ChatRoom.add({ roomName: "Custom Test 222!!" });
+            // ChatRoom.getAll().then(val => {
+
+            //     if (val) {
+            //         res.json(val)
+            //         console.log("Rooms: ", val)
+            //     } else {
+            //         res.json("no rooms")
+            //         console.log("Nothing in rooms")
+            //     }
+            // }).catch(err=>{
+            //     res.json("err catch")
+            // })
         })
     }
 
