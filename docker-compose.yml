@@ -20,24 +20,61 @@ services:
     ports:
       - 8080:8080
     links:
-      - cassandra
-    # depends_on:
-    #   - cassandra 
+      - dbpostgres
     depends_on:
-      cassandra:
+      dbpostgres:
         condition: service_healthy
-
-  cassandra:
-    build: cassandra
-    restart: always
+  dbpostgres:
+    image: postgres:9.6
+    ports:
+      - 5432:5432
+    # environment:
+    #   - POSTGRES_USER=someuser
+    #   - POSTGRES_PASSWORD=s0me-p4sswd
+    #   - POSTGRES_DB=test-db
+    #   - POSTGRES_PORT=5432
     volumes:
-      - ./data/cassandra:/var/lib/cassandra
-      - ./cassandra/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./data/postgres:/var/lib/postgresql
+      #- ./init.sql/startup.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    restart: always
     healthcheck:
-      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
       timeout: 10s
       retries: 5
+
+
+#  environment:
+#       - POSTGRES_USER=someuser
+#       - POSTGRES_PASSWORD=s0me-p4sswd
+#       - POSTGRES_DB=test-db
+#       - POSTGRES_PORT=5432
+#     volumes:
+#       - ./data/postgres:/var/lib/postgresql/data
+#       - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
+#     restart: always
+
+
+    # links:
+    #   - cassandra
+    # # depends_on:
+    # #   - cassandra 
+    # depends_on:
+    #   cassandra:
+    #     condition: service_healthy
+
+  # cassandra:
+  #   build: cassandra
+  #   restart: always
+  #   volumes:
+  #     - ./data/cassandra:/var/lib/cassandra
+  #     - ./cassandra/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
 
   # cassandra:
   #   image: cassandra:2.1.20

@@ -7,7 +7,9 @@ import { Message, User } from './model';
 import { MongooseInit } from './mongoose/connection'
 import { ChatRoom } from './mongoose/models/chatRoom'
 
-import { Client } from "cassandra-driver"
+// import { Client } from "cassandra-driver"
+
+import { Client } from 'pg';
 
 // const cassandra = require('cassandra-driver');
 // const client = new cassandra.Client({ contactPoints: ['h1', 'h2'], keyspace: 'ks1' });
@@ -24,28 +26,57 @@ export class ChatServer {
         // MongooseInit.connect();
 
         console.log("Heello 2")
+        
+       // const client = new Client("postgres://postgres:password@dbpostgres:5432/practicedocker")
 
-        const client = new Client({ contactPoints: ["cassandra"], keyspace: "demo" });
-
-        // client.connect().then(() => {
-        //     console.log("connected");
-
-        // }).catch((reason) => {
-        //     console.log("Sad panda: ", reason);
+       const client = new Client(
+        //"postgres://someuser:s0me-p4sswd@dbpostgres:5432/test-db")
+    
+        {
+        host: 'dbpostgres',
+        port: 5432,
+        database: "docker",
+        user: "docker",
+        password: "dockerPassword"
+    })
+            
+        //     {
+        //     host: 'dbpostgres',
+        //     port: 5432,
+        //     database: "holadb",
+        //     user: "hola",
+        //     password: "hola"
         // })
 
+        client.connect((err) => {
+            if (err) {
+                console.error('connection error', err.stack)
+            } else {
+                console.log('connected')
+            }
+        })
 
-        const query = 'INSERT INTO users (userid, first_name, last_name) VALUES (now(), ?, ?)';
-        client.execute(query, ['someone', 'gess'])
-            .then(result => console.log('User with email %s', result.rows)).catch((reason) => {
-                console.log("Sad panda inserting 1: ", reason);
-            })
+        // const client = new Client({ contactPoints: ["cassandra"], keyspace: "demo" });
+
+        // // client.connect().then(() => {
+        // //     console.log("connected");
+
+        // // }).catch((reason) => {
+        // //     console.log("Sad panda: ", reason);
+        // // })
+
 
         // const query = 'INSERT INTO users (userid, first_name, last_name) VALUES (now(), ?, ?)';
-        client.execute(query, ['ryan', 'pascal'])
-            .then(result => console.log('User with email %s', result.rows)).catch((reason) => {
-                console.log("Sad panda inserting 2: ", reason);
-            })
+        // client.execute(query, ['someone', 'gess'])
+        //     .then(result => console.log('User with email %s', result.rows)).catch((reason) => {
+        //         console.log("Sad panda inserting 1: ", reason);
+        //     })
+
+        // // const query = 'INSERT INTO users (userid, first_name, last_name) VALUES (now(), ?, ?)';
+        // client.execute(query, ['ryan', 'pascal'])
+        //     .then(result => console.log('User with email %s', result.rows)).catch((reason) => {
+        //         console.log("Sad panda inserting 2: ", reason);
+        //     })
 
         // query: 'INSERT INTO user_track (key, text, date) VALUES (now(), ?, ?)',
         // params: [ 'hendrix', 'Changed email', new Date() ]
@@ -82,12 +113,32 @@ export class ChatServer {
         this.app = express();
         this.app.get("/", (err, res, next) => {
 
+            const client = new Client(
+                //"postgres://someuser:s0me-p4sswd@dbpostgres:5432/test-db")
+            
+                {
+                host: 'dbpostgres',
+                port: 5432,
+                database: "docker",
+                user: "docker",
+                password: "dockerPassword"
+            })
 
-            const client = new Client({ contactPoints: ["cassandra"], keyspace: "demo" });
+    
+            client.connect((err) => {
+                if (err) {
+                    console.error('connection error', err.stack)
+                } else {
+                    console.log('connected')
+                }
+            })
 
-            const query = 'SELECT * FROM users';
-            client.execute(query)
-                .then(result => console.log(result.rows));
+
+            // const client = new Client({ contactPoints: ["cassandra"], keyspace: "demo" });
+
+            // const query = 'SELECT * FROM users';
+            // client.execute(query)
+            //     .then(result => console.log(result.rows));
 
 
             // client.connect().then(() => {
