@@ -1,6 +1,8 @@
 import { ChatServer } from './chat-server';
+import { inversifyContainer } from "./_config/inversify.config";
+import { TYPES } from "./_config/inversifyTypes";
 
-import { MongooseInit } from './mongoose/connection'
+const server = inversifyContainer.get<ChatServer>(TYPES.ChatServer);
 
-let app = new ChatServer(new MongooseInit()).getApp();
-export { app };
+server.setup();
+server.listen();

@@ -9,17 +9,13 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@types/cassandra-driver": "^3.2.3",
     "@types/express": "~4.0.36",
-    "@types/mongoose": "^5.0.7",
     "@types/pg": "^7.4.5",
-    "@types/redis": "^2.8.6",
     "@types/socket.io": "~1.4.29",
-    "cassandra-driver": "^3.4.1",
     "express": "~4.10.0",
-    "mongoose": "^5.0.11",
+    "inversify": "^4.11.1",
     "pg": "^7.4.1",
-    "redis": "^2.8.0",
+    "reflect-metadata": "^0.1.12",
     "socket.io": "~2.0.3"
   },
   "devDependencies": {
