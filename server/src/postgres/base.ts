@@ -1,4 +1,4 @@
-import { Client, Pool, PoolClient } from 'pg';
+import { Client, Pool, PoolClient, QueryConfig } from 'pg';
 
 import { injectable } from "inversify";
 
@@ -33,6 +33,11 @@ export class BasePostgres {
                 error("Error Connecting to pool")
             })
         });
+    }
+
+    async query(query: QueryConfig){
+        let client = await this.getPoolClient();
+        return client.query(query);
     }
 
 

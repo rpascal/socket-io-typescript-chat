@@ -10,6 +10,7 @@ import { TYPES } from "./_config/inversifyTypes";
 import { BasePostgres } from './postgres/base';
 
 import "reflect-metadata";
+import { UsersRoute } from './postgres/routes/UsersRoute';
 
 @injectable()
 export class ChatServer {
@@ -20,6 +21,7 @@ export class ChatServer {
     private port: string | number;
 
     @inject(TYPES.BasePostgres) private BasePostgres: BasePostgres;
+    @inject(TYPES.UsersRoute) private UsersRoute: UsersRoute;
 
 
     constructor() {
@@ -29,33 +31,7 @@ export class ChatServer {
 
 
     public setup(): void {
-        // const client = new Client({
-        //     host: 'dbpostgres',
-        //     port: 5432,
-        //     database: "docker",
-        //     user: "docker",
-        //     password: "dockerPassword"
-        // });
 
-        // client.connect((err) => {
-        //     if (err) {
-        //         console.error('connection error', err.stack)
-        //     } else {
-        //         console.log('connected')
-        //     }
-        // })
-
-        this.BasePostgres.getPoolClient().then(client => {
-
-            const query = {
-                text: 'INSERT INTO COMPANY(NAME, AGE) VALUES($1, $2)',
-                values: ['brianc', 4],
-            }
-            client.query(query)
-                .then(res => console.log(res))
-                .catch(e => console.error(e.stack))
-
-        })
 
         this.createApp();
         this.config();
@@ -68,35 +44,26 @@ export class ChatServer {
 
     private createApp(): void {
         this.app = express();
+        this.app.use("/users", this.UsersRoute.getRoute());
         this.app.get("/", (err, res, next) => {
 
 
             this.BasePostgres.getPoolClient().then(client => {
 
-                // const client = new Client({
-                //     host: 'dbpostgres',
-                //     port: 5432,
-                //     database: "docker",
-                //     user: "docker",
-                //     password: "dockerPassword"
-                // });
-
-                // client.connect();
-
                 const query = {
-                    text: 'SELECT * FROM COMPANY'
+                    text: 'SELECT * FROM users'
                 }
                 client.query(query)
                     .then(query => { console.log(query.rows); res.json(JSON.stringify(query.rows)); })
                     .catch(e => console.error(e.stack))
 
                 const query2 = {
-                    text: 'INSERT INTO COMPANY(NAME, AGE) VALUES($1, $2)',
-                    values: ['brianc: ' + Math.random().toString(), 4],
+                    text: 'INSERT INTO users(NAME, password) VALUES($1, $2)',
+                    values: ['brianc: ' + Math.random().toString(), "password" + Math.random().toString()],
                 }
-                client.query(query2)
-                    .then(res => console.log(res.rows[0]))
-                    .catch(e => console.error(e.stack))
+                client.query(query2);
+                //     .then(res => console.log(res.rows[0]))
+                //     .catch(e => console.error(e.stack))
 
             })
 
