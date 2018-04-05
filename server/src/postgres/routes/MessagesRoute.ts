@@ -6,22 +6,26 @@ import { injectable, inject } from "inversify";
 import { TYPES } from "../../_config/inversifyTypes";
 import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
-import { UserService } from "../models/users";
+import { MessageService, MessageExpandedModel } from "../models/messages";
 
 
 @injectable()
-export class UsersRoute {
+export class MessagesRoute {
     private router: Router = express.Router();
-    @inject(TYPES.UserService) private UserService: UserService;
+    @inject(TYPES.MessageService) private MessageService: MessageService;
+
 
     public getRoute(): Router {
-        
-        this.router.route("/")
+
+
+        this.router.route("/:ConversationID")
             .get((req: Request, res: Response) => {
-                this.UserService.getAll().then(data => {
+                const ConversationID: number = +req.params.ConversationID;
+                this.MessageService.getAll(ConversationID).then((data: MessageExpandedModel[]) => {
                     res.json(data);
                 });
-            }).post((req, res) => {
+            }).post((req: Request, res: Response) => {
+                const ConversationID: number = +req.params.ConversationID;
                 console.log(req, res);
             })
 

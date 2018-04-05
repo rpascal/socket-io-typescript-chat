@@ -8,6 +8,9 @@ import { UserService } from "../postgres/models/users";
 import { MessageService } from "../postgres/models/messages";
 import { MessageTypeService } from "../postgres/models/messageType";
 import { ConversationService } from "../postgres/models/conversation";
+import { MessagesRoute } from "../postgres/routes/MessagesRoute";
+import { MessageTypesRoute } from "../postgres/routes/MessageTypesRoute";
+import { ConversationsRoute } from "../postgres/routes/ConversationsRoute";
 
 
 
@@ -23,7 +26,10 @@ inversifyContainer.bind<MessageService>(TYPES.MessageService).to(MessageService)
 inversifyContainer.bind<MessageTypeService>(TYPES.MessageTypeService).to(MessageTypeService);
 inversifyContainer.bind<ConversationService>(TYPES.ConversationService).to(ConversationService);
 
+inversifyContainer.bind<MessagesRoute>(TYPES.MessagesRoute).to(MessagesRoute);
+inversifyContainer.bind<MessageTypesRoute>(TYPES.MessageTypesRoute).to(MessageTypesRoute);
 
+inversifyContainer.bind<ConversationsRoute>(TYPES.ConversationsRoute).to(ConversationsRoute);
 
 
 

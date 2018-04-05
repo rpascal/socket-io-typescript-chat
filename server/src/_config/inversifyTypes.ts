@@ -5,8 +5,10 @@ const TYPES = {
     UserService: Symbol.for("UserService"),
     MessageService: Symbol.for("MessageService"),
     MessageTypeService: Symbol.for("MessageTypeService"),
-    ConversationService: Symbol.for("ConversationService")
-    
+    ConversationService: Symbol.for("ConversationService"),
+    MessagesRoute: Symbol.for("MessagesRoute"),
+    MessageTypesRoute: Symbol.for("MessageTypesRoute"),
+    ConversationsRoute: Symbol.for("ConversationsRoute")    
 };
 
 

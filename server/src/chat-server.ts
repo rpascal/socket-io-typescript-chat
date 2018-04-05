@@ -2,7 +2,6 @@ import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-import { Message, User } from './model';
 
 import { Client } from 'pg';
 import { injectable, inject } from "inversify";
@@ -12,7 +11,11 @@ import { BasePostgres } from './postgres/base';
 import "reflect-metadata";
 import { UsersRoute } from './postgres/routes/UsersRoute';
 import { UserService } from './postgres/models/users';
-import { MessageService } from './postgres/models/messages';
+import { MessageService, MessageModel } from './postgres/models/messages';
+import { ConversationService } from './postgres/models/conversation';
+import { MessagesRoute } from './postgres/routes/MessagesRoute';
+import { ConversationsRoute } from './postgres/routes/ConversationsRoute';
+import { MessageTypesRoute } from './postgres/routes/MessageTypesRoute';
 
 @injectable()
 export class ChatServer {
@@ -27,6 +30,10 @@ export class ChatServer {
     @inject(TYPES.UserService) private UserService: UserService;
     @inject(TYPES.MessageService) private MessageService: MessageService;
 
+    @inject(TYPES.ConversationsRoute) private ConversationsRoute: ConversationsRoute;
+    @inject(TYPES.MessagesRoute) private MessagesRoute: MessagesRoute;
+    @inject(TYPES.MessageTypesRoute) private MessageTypesRoute: MessageTypesRoute;
+    
 
     constructor() {
 
@@ -49,6 +56,10 @@ export class ChatServer {
     private createApp(): void {
         this.app = express();
         this.app.use("/users", this.UsersRoute.getRoute());
+        this.app.use("/conversations", this.ConversationsRoute.getRoute());
+        this.app.use("/messages", this.MessagesRoute.getRoute());
+        this.app.use("/messageTypes", this.MessageTypesRoute.getRoute());
+
         this.app.get("/", (err, res, next) => {
 
             this.MessageService.getAll(123456879).then(data => {
@@ -90,10 +101,10 @@ export class ChatServer {
             console.log('Error connecting to server');
         });
         this.io.on('connect', (socket: any) => {
-
+            
 
             console.log('Connected client on port %s.', this.port);
-            socket.on('message', (m: Message) => {
+            socket.on('message', (m: MessageModel) => {
                 console.log('[server](message): %s', JSON.stringify(m));
                 this.io.emit('message', m);
             });

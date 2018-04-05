@@ -5,6 +5,7 @@ import { Message } from '../model/message';
 import { Event } from '../model/event';
 
 import { connect } from 'socket.io-client';
+import { environment } from 'environments/environment';
 
 
 @Injectable()
@@ -12,7 +13,7 @@ export class SocketService {
     private socket;
 
     public initSocket(): void {
-        this.socket = connect("http://localhost:8080");
+        this.socket = connect(environment.socketioConnection);
     }
 
     public send(message: Message): void {
