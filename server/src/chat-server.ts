@@ -11,6 +11,8 @@ import { BasePostgres } from './postgres/base';
 
 import "reflect-metadata";
 import { UsersRoute } from './postgres/routes/UsersRoute';
+import { UserService } from './postgres/models/users';
+import { MessageService } from './postgres/models/messages';
 
 @injectable()
 export class ChatServer {
@@ -22,6 +24,8 @@ export class ChatServer {
 
     @inject(TYPES.BasePostgres) private BasePostgres: BasePostgres;
     @inject(TYPES.UsersRoute) private UsersRoute: UsersRoute;
+    @inject(TYPES.UserService) private UserService: UserService;
+    @inject(TYPES.MessageService) private MessageService: MessageService;
 
 
     constructor() {
@@ -47,27 +51,20 @@ export class ChatServer {
         this.app.use("/users", this.UsersRoute.getRoute());
         this.app.get("/", (err, res, next) => {
 
-
-            this.BasePostgres.getPoolClient().then(client => {
-
-                const query = {
-                    text: 'SELECT * FROM users'
-                }
-                client.query(query)
-                    .then(query => { console.log(query.rows); res.json(JSON.stringify(query.rows)); })
-                    .catch(e => console.error(e.stack))
-
-                const query2 = {
-                    text: 'INSERT INTO users(NAME, password) VALUES($1, $2)',
-                    values: ['brianc: ' + Math.random().toString(), "password" + Math.random().toString()],
-                }
-                client.query(query2);
-                //     .then(res => console.log(res.rows[0]))
-                //     .catch(e => console.error(e.stack))
-
+            this.MessageService.getAll(123456879).then(data => {
+                console.log("message seriovce", data);
             })
 
+            this.UserService.insert({ NAME: 'brianc: ' + Math.random().toString(), password: "password" + Math.random().toString() }).then(res => {
+                if (res) {
+                    console.log("inserted all good");
+                } else {
+                    console.log("didnt insert :(")
+                }
 
+            });
+
+            res.send("HI")
         })
     }
 
