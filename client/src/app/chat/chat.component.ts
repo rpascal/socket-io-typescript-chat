@@ -15,7 +15,7 @@ const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 @Component({
   selector: 'tcc-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, AfterViewInit {
   action = Action;
@@ -68,8 +68,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   private initModel(): void {
     const randomId = this.getRandomId();
     this.user = {
-      id: randomId,
-      avatar: `${AVATAR_URL}/${randomId}.png`
+      id: randomId
     };
   }
 

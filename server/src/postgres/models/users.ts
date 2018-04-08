@@ -14,6 +14,12 @@ export interface UserModel {
     created_at?: Date;
 }
 
+export interface UserViewModel{
+    ID?: number;
+    NAME: string;
+    created_at?: Date;
+}
+
 @injectable()
 export class UserService {
     @inject(TYPES.BasePostgres) private BasePostgres: BasePostgres;
@@ -24,11 +30,15 @@ export class UserService {
     }
 
 
-    public getAll(): Promise<UserModel[]> {
-        return new Promise<UserModel[]>((resolve) => {
+    public getAll(): Promise<UserViewModel[]> {
+        return new Promise<UserViewModel[]>((resolve) => {
 
             var query: QueryConfig = {
-                text: `SELECT * FROM ${this.tableName}`
+                text: `SELECT 
+                    ID,
+                    NAME,
+                    created_at
+                FROM ${this.tableName}`
             };
             this.BasePostgres.query(query).then((queryRes: QueryResult) => {
                 resolve(queryRes.rows);

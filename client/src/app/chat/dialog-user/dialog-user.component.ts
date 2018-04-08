@@ -5,7 +5,7 @@ import { FormControl, Validators } from '@angular/forms';
 @Component({
   selector: 'tcc-dialog-user',
   templateUrl: './dialog-user.component.html',
-  styleUrls: ['./dialog-user.component.css']
+  styleUrls: ['./dialog-user.component.scss']
 })
 export class DialogUserComponent implements OnInit {
   usernameFormControl = new FormControl('', [Validators.required]);

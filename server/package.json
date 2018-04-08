@@ -6,6 +6,7 @@
   "author": "Luis Aviles",
   "license": "MIT",
   "scripts": {
+    "gstart": "gulp build && npm run start",
     "start": "node dist/index.js"
   },
   "dependencies": {
