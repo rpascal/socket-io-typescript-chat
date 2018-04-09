@@ -1,12 +1,12 @@
 export interface User {
-    ID?: number;
-    NAME?: string;
+    id?: number;
+    username?: string;
     password?: string;
     created_at?: Date;
 }
 
 // export interface UserViewModel {
-//     ID?: number;
-//     NAME: string;
+//     id?: number;
+//     username: string;
 //     created_at?: Date;
 // }

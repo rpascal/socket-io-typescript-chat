@@ -6,7 +6,7 @@ import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
 
 export interface MessageModel {
-    ID?: number;
+    id?: number;
     conversation_id: number;
     sender_id: number;
     message_type: number;
@@ -35,25 +35,25 @@ export class MessageService {
     }
 
 
-    public getAll(converstionID: number): Promise<MessageExpandedModel[]> {
+    public getAll(converstionid: number): Promise<MessageExpandedModel[]> {
         return new Promise<MessageExpandedModel[]>((resolve) => {
 
             var query: QueryConfig = {
                 text: `SELECT 
-                    M.ID,
+                    M.id,
                     M.conversation_id,
                     M.sender_id,
                     M.message_type,
                     M.message,
                     M.created_at,
-                    U.NAME AS sender_name,
+                    U.username AS sender_name,
                     MT.type AS message_type_str
                 FROM ${this.tableName} AS M
-                LEFT JOIN ${this.userTableName} AS U ON M.sender_id = U.ID
-                LEFT JOIN ${this.messageTypeTableName} AS MT ON M.message_type = MT.ID
+                LEFT JOIN ${this.userTableName} AS U ON M.sender_id = U.id
+                LEFT JOIN ${this.messageTypeTableName} AS MT ON M.message_type = MT.id
                 WHERE conversation_id = $1
                 `,
-                values: [converstionID]
+                values: [converstionid]
             };
             this.BasePostgres.query(query).then((queryRes: QueryResult) => {
                 resolve(queryRes.rows);

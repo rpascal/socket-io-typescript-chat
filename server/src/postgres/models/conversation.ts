@@ -6,7 +6,7 @@ import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
 
 export interface ConversationModel {
-    ID?: number;
+    id?: number;
     title: string;
     creator_id: number;
     created_at?: Date;
@@ -34,14 +34,14 @@ export class ConversationService {
 
             var query: QueryConfig = {
                 text: `SELECT 
-                    C.ID,
+                    C.id,
                     C.title,
                     C.creator_id,
                     C.created_at,
                     C.public,
-                    U.NAME AS sender_name
+                    U.username AS sender_name
                 FROM ${this.tableName} AS C
-                LEFT JOIN ${this.userTableName} AS U ON C.creator_id = U.ID
+                LEFT JOIN ${this.userTableName} AS U ON C.creator_id = U.id
                 `
             };
             this.BasePostgres.query(query).then((queryRes: QueryResult) => {

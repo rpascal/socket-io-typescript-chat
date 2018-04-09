@@ -68,7 +68,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   private initModel(): void {
     const randomId = this.getRandomId();
     this.user = {
-      ID: randomId
+      id: randomId
     };
   }
 
@@ -114,7 +114,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   public onClickUserInfo() {
     this.openUserPopup({
       data: {
-        username: this.user.NAME,
+        username: this.user.username,
         title: 'Edit Details',
         dialogType: DialogUserType.EDIT
       }
@@ -128,7 +128,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this.user.NAME = paramsDialog.username;
+      this.user.username = paramsDialog.username;
       if (paramsDialog.dialogType === DialogUserType.NEW) {
         this.initIoConnection();
         this.sendNotification(paramsDialog, Action.JOINED);
@@ -162,7 +162,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
       message = {
         action: action,
         content: {
-          username: this.user.NAME,
+          username: this.user.username,
           previousUsername: params.previousUsername
         }
       };

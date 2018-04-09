@@ -6,7 +6,7 @@ import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
 
 export interface MessageTypeModel {
-    ID?: number;
+    id?: number;
     type: string;
 }
 
@@ -26,7 +26,7 @@ export class MessageTypeService {
 
             var query: QueryConfig = {
                 text: `SELECT 
-                    ID,
+                    id,
                     type
                 FROM ${this.tableName}
                 `

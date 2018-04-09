@@ -6,7 +6,7 @@ import { injectable, inject } from "inversify";
 import { TYPES } from "../../_config/inversifyTypes";
 import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
-import { UserService, UserModel } from "../models/users";
+import { UserService, UserModel, instanceOfUserModel } from "../models/users";
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 
@@ -18,49 +18,47 @@ export class UsersRoute {
     public getRoute(): Router {
 
         this.router.route("/authenticate")
-            .post((req: Request, res) => {
-                // console.log(req.body,req.headers,req.params);
-                this.UserService.authenticate(req.body.username)
-                    .then((user: UserModel) => {
-                        console.log("authenticate", user)
-                        if (user != null && bcrypt.compareSync(req.body.password, user.password)) {
-                            console.log("authenticate yes")
-                            user.token = jwt.sign({ sub: user.ID }, AppConfig.secret);
+            .post(async (req: Request, res) => {
 
-                            // authentication successful
-                            res.send(user);
-                        } else {
-                            // authentication failed
-                            res.status(400).send('Username or password is incorrect');
+                try {
+                    const authedUser = await this.UserService.authenticate(req.body.username);
+                    console.log("authenticate", authedUser, instanceOfUserModel(authedUser))
+
+                    if (instanceOfUserModel(authedUser)) {
+                        if (bcrypt.compareSync(req.body.password, authedUser.password)) {
+                            authedUser.token = jwt.sign({ sub: authedUser.id }, AppConfig.secret);
+                            console.log("pre send")
+                            res.send(authedUser);
+                            return;
                         }
-                    })
-                    .catch(function (err) {
-                        res.status(400).send(err);
-                    });
+                    }
+                    res.status(400).send('Username or password is incorrect');
+                } catch (err) {
+                    res.status(400).send(err);
+                }
             })
 
 
         this.router.route("/register")
-            .post((req: Request, res) => {
-                console.log("Resgister route", req.body);
-                this.UserService.register(req.body)
-                    .then(() => {
-                        res.json('success');
-                    })
-                    .catch((err) => {
-                        res.status(400).send(err);
-                    });
+            .post(async (req: Request, res) => {
+                try {
+                    await this.UserService.register(req.body);
+                    res.json('success');
+                } catch (err) {
+                    res.status(400).send(err);
+                }
             })
 
 
         this.router.route("/")
-            .get((req: Request, res: Response) => {
-                console.log("got into user service get server")
-                this.UserService.getAll().then(data => {
-                    res.json(data);
-                });
-            }).post((req, res) => {
-                console.log(req, res);
+            .get(async (req: Request, res: Response) => {
+                try {
+                    const users = await this.UserService.getAll();
+                    res.json(users);
+                } catch (err) {
+                    res.status(400).send(err);
+                }
+
             })
 
 

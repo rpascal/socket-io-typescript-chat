@@ -97,7 +97,7 @@ export class ChatServer {
                 console.log("message seriovce", data);
             })
 
-            this.UserService.insert({ NAME: 'brianc: ' + Math.random().toString(), password: "password" + Math.random().toString() }).then(res => {
+            this.UserService.insert({ username: 'brianc: ' + Math.random().toString(), password: "password" + Math.random().toString() }).then(res => {
                 if (res) {
                     console.log("inserted all good");
                 } else {

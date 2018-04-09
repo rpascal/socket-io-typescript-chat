@@ -6,13 +6,15 @@ import 'rxjs/add/operator/map'
 import { environment } from '../../../../environments/environment';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
 
-    private logonStatus = new Subject<boolean>();
+    private logonStatus = new BehaviorSubject<boolean>(false);
+    private loggedOff = new BehaviorSubject<boolean>(false);
 
 
     login(username: string, password: string) {
@@ -32,15 +34,21 @@ export class AuthenticationService {
             });
     }
 
-    logout() {
+    logout(flagLogOffRedirect = true) {
+        console.log("logout function")
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.logonStatus.next(false);
+        this.loggedOff.next(flagLogOffRedirect);
     }
 
 
     monitorUserState(): Observable<boolean> {
         return this.logonStatus.asObservable();
+    }
+
+    monitorLoggedOff(): Observable<boolean> {
+        return this.loggedOff.asObservable();
     }
 
 }

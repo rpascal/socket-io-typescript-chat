@@ -22,11 +22,18 @@ export class AppComponent implements OnInit {
       if (loggedOn) {
         console.log("Logged on");
       } else {
-        this.router.navigate(['/login'])
         this.sidenav.close();
         console.log("Logged off");
       }
     })
+    this.authenicationService.monitorLoggedOff().subscribe((loggedOff) => {
+
+      if (loggedOff) {
+        console.log("route log off");
+        this.router.navigate(['/login']);
+      }
+    })
+
   }
 
   private initModel(): void {
