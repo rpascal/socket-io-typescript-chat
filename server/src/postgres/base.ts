@@ -1,4 +1,4 @@
-import { Client, Pool, PoolClient, QueryConfig } from 'pg';
+import { Client, Pool, PoolClient, QueryConfig, QueryResult } from 'pg';
 
 import { injectable } from "inversify";
 
@@ -24,20 +24,24 @@ export class BasePostgres {
     }
 
 
-    getPoolClient(): Promise<PoolClient> {
-        return new Promise<PoolClient>((resolve: (value?: PoolClient | PromiseLike<PoolClient>) => void, error: (reason?: any) => void) => {
-            this.pool.connect().then((value: PoolClient) => {
-                resolve(value);
-            }).catch(err => {
-                console.log("Error Connecting to pool", err);
-                error("Error Connecting to pool")
-            })
-        });
+    async getPoolClient(): Promise<PoolClient> {
+        try {
+            const client = await this.pool.connect();
+            return client;
+        } catch (err) {
+            return Promise.reject(err);
+        }
     }
 
-    async query(query: QueryConfig){
-        let client = await this.getPoolClient();
-        return client.query(query);
+    async query(query: QueryConfig): Promise<QueryResult> {
+        try {
+            const client = await this.getPoolClient();
+            const queryRes = await client.query(query);
+            client.release();
+            return queryRes;
+        } catch (err) {
+            return Promise.reject(err);
+        }
     }
 
 

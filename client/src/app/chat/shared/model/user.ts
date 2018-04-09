@@ -1,4 +1,12 @@
 export interface User {
-    id?: number;
-    name?: string;
+    ID?: number;
+    NAME?: string;
+    password?: string;
+    created_at?: Date;
 }
+
+// export interface UserViewModel {
+//     ID?: number;
+//     NAME: string;
+//     created_at?: Date;
+// }

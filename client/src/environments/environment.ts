@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  socketioConnection: "http://localhost:8080"
+  socketioConnection: "http://localhost:8080",
+  apiRoute: "http://localhost:8080/api"
 };

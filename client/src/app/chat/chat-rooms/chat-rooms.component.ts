@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../shared/services/user/user.service';
 
 @Component({
   selector: 'tcc-chat-rooms',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatRoomsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
+    this.userService.getAll().subscribe(data => {
+      console.log("got into user service get", data)
+    })
   }
 
 }

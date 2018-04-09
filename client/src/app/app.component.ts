@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AuthenticationService } from './shared/services/authentication/authentication.service';
+import { Router } from '@angular/router';
+import { MatSidenav } from '@angular/material';
 
 @Component({
   selector: 'tcc-root',
@@ -7,9 +10,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
+  @ViewChild("sidenav") sidenav: MatSidenav;
+
+
+  constructor(private router: Router, private authenicationService: AuthenticationService) {
+
+  }
+
   ngOnInit(): void {
+    this.authenicationService.monitorUserState().subscribe(loggedOn => {
+      if (loggedOn) {
+        console.log("Logged on");
+      } else {
+        this.router.navigate(['/login'])
+        this.sidenav.close();
+        console.log("Logged off");
+      }
+    })
   }
 
   private initModel(): void {
   }
+
+  logout() {
+    this.authenicationService.logout();
+  }
+
 }

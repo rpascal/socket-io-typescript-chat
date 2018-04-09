@@ -1,5 +1,13 @@
  .app-content {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-} 
+     width: 100%;
+     height: 100%;
+     box-sizing: border-box;
+ }
+
+ .successSnackBar {
+     background-color: rgb(29, 102, 29) !important;
+ }
+
+ .errorSnackBar {
+     background-color: rgb(153, 50, 50) !important;
+ }

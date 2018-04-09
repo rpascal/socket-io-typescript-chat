@@ -16,6 +16,13 @@ import { ConversationService } from './postgres/models/conversation';
 import { MessagesRoute } from './postgres/routes/MessagesRoute';
 import { ConversationsRoute } from './postgres/routes/ConversationsRoute';
 import { MessageTypesRoute } from './postgres/routes/MessageTypesRoute';
+import { Router } from 'express';
+
+import * as expressJwt from 'express-jwt';
+import { AppConfig } from './_config/app.config';
+
+import * as cors from 'cors';
+import * as  bodyParser from 'body-parser';
 
 @injectable()
 export class ChatServer {
@@ -33,7 +40,7 @@ export class ChatServer {
     @inject(TYPES.ConversationsRoute) private ConversationsRoute: ConversationsRoute;
     @inject(TYPES.MessagesRoute) private MessagesRoute: MessagesRoute;
     @inject(TYPES.MessageTypesRoute) private MessageTypesRoute: MessageTypesRoute;
-    
+
 
     constructor() {
 
@@ -55,11 +62,35 @@ export class ChatServer {
 
     private createApp(): void {
         this.app = express();
-        this.app.use("/users", this.UsersRoute.getRoute());
-        this.app.use("/conversations", this.ConversationsRoute.getRoute());
-        this.app.use("/messages", this.MessagesRoute.getRoute());
-        this.app.use("/messageTypes", this.MessageTypesRoute.getRoute());
+        this.app.use(cors());
+        this.app.use(bodyParser.urlencoded({ extended: false }));
+        this.app.use(bodyParser.json());
+        this.app.use(expressJwt({
+            secret: AppConfig.secret,
+            getToken: function (req) {
+                if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+                    return req.headers.authorization.split(' ')[1];
+                } else if (req.query && req.query.token) {
+                    return req.query.token;
+                }
+                return null;
+            }
+        }).unless({ path: ['/api/users/authenticate', '/api/users/register'] }));
 
+        this.app.use("/api/users", this.UsersRoute.getRoute());
+        this.app.use("/api/conversations", this.ConversationsRoute.getRoute());
+        this.app.use("/api/messages", this.MessagesRoute.getRoute());
+        this.app.use("/api/messageTypes", this.MessageTypesRoute.getRoute());
+
+        // const router: Router = express.Router();
+
+        // router.route("/")
+        //     .get((req, res) => {
+        //         res.send("HI api")
+        //     })
+
+
+        // this.app.use("/api", router);
         this.app.get("/", (err, res, next) => {
 
             this.MessageService.getAll(123456879).then(data => {
@@ -101,7 +132,7 @@ export class ChatServer {
             console.log('Error connecting to server');
         });
         this.io.on('connect', (socket: any) => {
-            
+
 
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: MessageModel) => {

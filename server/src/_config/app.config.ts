@@ -7,12 +7,14 @@ export const AppConfig: IAppConfig = {
     conversation: "conversation",
     messages: "messages",
     messageType: "messageType"
-  }
+  },
+  secret: "SECRET"
 };
 
 interface IAppConfig {
   port: number;
   tables: ITables;
+  secret: string;
 }
 interface ITables {
   users: string;

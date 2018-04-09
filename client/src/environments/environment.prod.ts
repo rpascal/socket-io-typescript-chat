@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  socketioConnection: ""
+  socketioConnection: "",
+  apiRoute: "/api"
 };
