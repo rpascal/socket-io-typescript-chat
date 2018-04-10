@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../shared/services/authentication/authentication.service';
 import { AlertService } from '../shared/services/alert/alert.service';
 import { UserService } from '../shared/services/user/user.service';
 import { User } from '../chat/shared/model/user';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
 @Component({
@@ -12,27 +13,50 @@ import { User } from '../chat/shared/model/user';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
-  model: User = {};
+  registerForm: FormGroup;
   loading = false;
+
 
   constructor(
     private router: Router,
     private userService: UserService,
     private alertService: AlertService) { }
 
-  register() {
+
+  ngOnInit() {
+    this.createForm();
+  }
+
+  private createForm() {
+    this.registerForm = new FormGroup({
+      username: new FormControl('', [Validators.required]),
+      password: new FormControl('', Validators.required),
+    });
+  }
+
+  public register() {
     this.loading = true;
-    this.userService.create(this.model)
+
+    const model: User = {
+      username: this.registerForm.get("username").value,
+      password: this.registerForm.get("password").value,
+    };
+    this.userService.create(model)
       .subscribe(
         data => {
           this.alertService.success('Registration successful');
           this.router.navigate(['/login']);
+          this.loading = false;
+
         },
         error => {
           this.alertService.error(error);
           this.loading = false;
+
         });
   }
+
+
 }

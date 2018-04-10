@@ -20,8 +20,8 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     AppRoutingModule,
     ChatModule,
+    FormsModule,
     SharedModule,
-    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

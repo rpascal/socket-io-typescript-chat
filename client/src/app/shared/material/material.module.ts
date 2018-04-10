@@ -11,7 +11,7 @@ import {
   MatListModule,
   MatSidenavModule,
   MatToolbarModule,
-  MatSnackBarModule,
+  MatSnackBarModule
 } from '@angular/material';
 
 @NgModule({
