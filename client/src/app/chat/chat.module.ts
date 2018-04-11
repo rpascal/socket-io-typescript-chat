@@ -9,13 +9,15 @@ import { SocketService } from './shared/services/socket.service';
 import { DialogUserComponent } from './dialog-user/dialog-user.component';
 import { ChatRoomsComponent } from './chat-rooms/chat-rooms.component';
 import { CreateChatRoomComponent } from './chat-rooms/create-chat-room/create-chat-room.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    NgSelectModule
   ],
   declarations: [ChatComponent, DialogUserComponent, ChatRoomsComponent, CreateChatRoomComponent],
   providers: [SocketService],

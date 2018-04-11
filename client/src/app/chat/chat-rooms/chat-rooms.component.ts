@@ -21,6 +21,8 @@ export class ChatRoomsComponent implements OnInit {
 
   createRoom(): void {
     const dialogRef = this.dialog.open(CreateChatRoomComponent, {
+      width: "500px",
+      height: "500px"
     });
 
     dialogRef.afterClosed().subscribe(result => {

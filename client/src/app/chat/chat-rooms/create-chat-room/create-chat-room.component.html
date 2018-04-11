@@ -1,10 +1,22 @@
 <h1 mat-dialog-title>Lets create a chat room</h1>
-<div mat-dialog-content>
+<!-- <div mat-dialog-content> -->
+  
   <p>New Room</p>
-  <mat-form-field>
-    <input matInput>
-  </mat-form-field>
-</div>
+  <!-- <mat-form-field> -->
+  <ng-select [items]="users | async" bindLabel="username" bindValue="id" [(ngModel)]="selectedUser">
+  </ng-select>
+  <br />Selected: {{selectedUser}}
+
+
+  <ng-select [items]="defaultBindingsList" [(ngModel)]="selectedCity">
+  </ng-select>
+
+  <p>
+    Selected city object: {{selectedCity | json}}
+  </p>
+
+  <!-- </mat-form-field> -->
+<!-- </div> -->
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
 </div>
