@@ -8,6 +8,7 @@ import { ChatComponent } from './chat.component';
 import { SocketService } from './shared/services/socket.service';
 import { DialogUserComponent } from './dialog-user/dialog-user.component';
 import { ChatRoomsComponent } from './chat-rooms/chat-rooms.component';
+import { CreateChatRoomComponent } from './chat-rooms/create-chat-room/create-chat-room.component';
 
 @NgModule({
   imports: [
@@ -16,8 +17,8 @@ import { ChatRoomsComponent } from './chat-rooms/chat-rooms.component';
     ReactiveFormsModule,
     MaterialModule
   ],
-  declarations: [ChatComponent, DialogUserComponent, ChatRoomsComponent],
+  declarations: [ChatComponent, DialogUserComponent, ChatRoomsComponent, CreateChatRoomComponent],
   providers: [SocketService],
-  entryComponents: [DialogUserComponent]
+  entryComponents: [DialogUserComponent, CreateChatRoomComponent]
 })
 export class ChatModule { }
