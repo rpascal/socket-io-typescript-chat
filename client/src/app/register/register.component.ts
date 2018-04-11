@@ -22,7 +22,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private alertService: AlertService) { }
+    private alertService: AlertService,
+    private authenticationService: AuthenticationService) { }
 
 
   ngOnInit() {
@@ -47,8 +48,17 @@ export class RegisterComponent implements OnInit {
       .subscribe(
         data => {
           this.alertService.success('Registration successful');
-          this.router.navigate(['/login']);
-          this.loading = false;
+
+          this.authenticationService.login(model.username, model.password)
+            .subscribe(() => {
+              this.router.navigate(["/"]);
+              this.loading = false;
+            },
+              error => {
+                console.log("Error logging in");
+                this.router.navigate(['/login']);
+                this.loading = false;
+              });
 
         },
         error => {

@@ -19,7 +19,7 @@ import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
     FormsModule,
     ReactiveFormsModule,
     LoadingModule.forRoot({
-      animationType: ANIMATION_TYPES.wanderingCubes,
+      animationType: ANIMATION_TYPES.threeBounce,
       backdropBackgroundColour: 'rgba(0,0,0,0.3)',
       backdropBorderRadius: '4px',
       primaryColour: '#0000ff',

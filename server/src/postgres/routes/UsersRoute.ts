@@ -22,8 +22,6 @@ export class UsersRoute {
 
                 try {
                     const authedUser = await this.UserService.authenticate(req.body.username);
-                    console.log("authenticate", authedUser, instanceOfUserModel(authedUser))
-
                     if (instanceOfUserModel(authedUser)) {
                         if (bcrypt.compareSync(req.body.password, authedUser.password)) {
                             authedUser.token = jwt.sign({ sub: authedUser.id }, AppConfig.secret);
