@@ -3,12 +3,12 @@
   
   <p>New Room</p>
   <!-- <mat-form-field> -->
-  <ng-select [items]="users | async" bindLabel="username" bindValue="id" [(ngModel)]="selectedUser">
+  <ng-select [items]="users | async" bindLabel="username" bindValue="id" appendTo="body" [(ngModel)]="selectedUser">
   </ng-select>
   <br />Selected: {{selectedUser}}
 
 
-  <ng-select [items]="defaultBindingsList" [(ngModel)]="selectedCity">
+  <ng-select [items]="defaultBindingsList"  appendTo="body" [(ngModel)]="selectedCity">
   </ng-select>
 
   <p>
