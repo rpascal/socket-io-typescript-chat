@@ -1,6 +1,63 @@
-@import "~@angular/material/prebuilt-themes/purple-green.css";
-@import "~bootstrap/scss/bootstrap";
+/*Material Theme*/
 
-// @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "assets/styles/materialTheme.scss";
+/*Bootstrap Start*/
 
-@import "~@ng-select/ng-select/themes/material.theme.css";
+@import "assets/styles/ChatApp/BootstrapVariables.scss";
+@include bootstrap-theme-variables($fe-app-theme);
+/*Font Awesome*/
+
+$fa-font-path: "../node_modules/font-awesome/fonts";
+@import "../node_modules/font-awesome/scss/font-awesome.scss";
+@import "../node_modules/bootstrap/scss/bootstrap";
+/*Bootstrap end*/
+
+/*Custom Start*/
+
+@import "assets/styles/ChatApp/CustomStyles/_CustomStyles.scss";
+@include custom-styles($fe-app-theme);
+/*Custom End*/
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+body {
+  margin: 0;
+  font-family: Helvetica Neue, Roboto, Arial, Droid Sans, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  width: 100%;
+  height: 100%;
+}
+
+*:focus {
+  outline: 0 !important
+}
+
+a {
+  color: #5a738e;
+  text-decoration: none;
+}
+
+
+
+.centered-dialog {
+  max-width: 80vw;
+  .mat-dialog-container {
+    max-width: none;
+  }
+}
+
+.snackbarSuccess {
+  background-color: #51A351 !important;
+}
+
+.snackbarError {
+  background-color: #BD362F !important;
+}
+
+.mat-tooltip {
+  font-size: 16px !important;
+}
+
+
+
