@@ -15,16 +15,31 @@ export class ConversationsRoute {
     @inject(TYPES.ConversationService) private ConversationService: ConversationService;
 
     public getRoute(): Router {
-        
-        this.router.route("/")
-            .get((req: Request, res: Response) => {
-                this.ConversationService.getAll().then(data => {
-                    res.json(data);
-                });
+
+        this.router.route("/:userID")
+            .get(async (req: Request, res: Response) => {
+                const userID: number = +req.params.userID;
+
+                try {
+                    const conversations = await this.ConversationService.getUsersConversations(userID);
+                    res.json(conversations);
+                    return;
+                } catch (err) {
+                    res.status(400).send(err);
+                    return;
+                }
+
+                // this.ConversationService.getUsersConversations(userID).then(data => {
+                //     res.json(data);
+                // });
             }).post((req, res) => {
                 console.log(req, res);
             })
 
+        this.router.route("create/:userID")
+            .post((req, res) => {
+                console.log(req, res);
+            })
 
         return this.router;
     }

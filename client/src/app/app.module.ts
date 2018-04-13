@@ -8,7 +8,7 @@ import { ChatModule } from './chat/chat.module';
 import { SharedModule } from './shared/shared.module';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from "./login/login.component"
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
     ChatModule,
     FormsModule,
     SharedModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
