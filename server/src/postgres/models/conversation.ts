@@ -31,59 +31,29 @@ export class ConversationService {
     }
 
 
-    public async getUsersConversations(userID: number): Promise<ConversationExpandedModel[]> {
-
+    public async getUsersConversations(userID: number): Promise<ConversationModel[]> {
+        
         var query: QueryConfig = {
-            text: `SELECT 
+            text: `
+            SELECT 
                 C.id,
                 C.title,
                 C.creator_id,
                 C.created_at,
-                C.public,
-                U.username AS sender_name
-                U.id as user_id
-            FROM ${this.tableName} AS C
-            LEFT JOIN ${this.conversationUsersTableName} AS CU ON C.id = CU.conversation_id
-            LEFT JOIN ${this.userTableName} AS U ON CU.user_id = U.id
+                C.public
+            FROM ${this.conversationUsersTableName} AS CU 
+            LEFT JOIN ${this.tableName} AS C ON CU.conversation_id = C.id
             WHERE CU.user_id = ${userID} 
             `
         };
 
         try {
             const queryRes = await this.BasePostgres.query(query);
-            if (queryRes.rowCount > 0) {
-
-                var group = _.groupBy(queryRes.rows,"id")
-                console.log(group)
-                // group.
-                // const rowOne = queryRes.rows[0];
-                // var model: ConversationExpandedModel = {
-                //     creator_id: rowOne.creator_id,
-                //     id : rowOne
-                // }
-                // queryRes.rows.forEach(item => {
-
-                // })
-            }
-
-
-            return (queryRes.rows as ConversationExpandedModel[])
+            return (queryRes.rows as ConversationModel[])
         } catch (err) {
             return Promise.reject(err);
         }
 
-
-        // return new Promise<ConversationExpandedModel[]>((resolve) => {
-
-
-        //     this.BasePostgres.query(query).then((queryRes: QueryResult) => {
-        //         resolve(queryRes.rows);
-        //     }).catch((err) => {
-        //         console.log("Error getting data from Conversations table");
-        //         resolve([]);
-        //     })
-
-        // });
     }
 
     public async insert(Conversation: ConversationModel): Promise<boolean> {

@@ -10,6 +10,7 @@ import { DialogUserComponent } from './dialog-user/dialog-user.component';
 import { ChatRoomsComponent } from './chat-rooms/chat-rooms.component';
 import { CreateChatRoomComponent } from './chat-rooms/create-chat-room/create-chat-room.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ConversationService } from './shared/services/conversations/conversation.service';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgSelectModule
   ],
   declarations: [ChatComponent, DialogUserComponent, ChatRoomsComponent, CreateChatRoomComponent],
-  providers: [SocketService],
+  providers: [SocketService, ConversationService],
   entryComponents: [DialogUserComponent, CreateChatRoomComponent]
 })
 export class ChatModule { }

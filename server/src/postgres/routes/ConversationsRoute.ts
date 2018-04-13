@@ -36,9 +36,9 @@ export class ConversationsRoute {
                 console.log(req, res);
             })
 
-        this.router.route("create/:userID")
+        this.router.route("/create")
             .post((req, res) => {
-                console.log(req, res);
+                console.log(req.body);
             })
 
         return this.router;

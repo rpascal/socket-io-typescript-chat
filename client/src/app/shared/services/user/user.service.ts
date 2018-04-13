@@ -10,6 +10,10 @@ import 'rxjs/add/operator/take';
 export class UserService {
     constructor(private http: HttpClient) { }
 
+    getLoggedInUser(): User {
+        return (localStorage.getItem('currentUser') || {}) as User;
+    }
+
     getAll() {
         return this.http.get<User[]>(environment.apiRoute + '/users').take(1);
     }
