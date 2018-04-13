@@ -32,9 +32,10 @@ export class ConversationsRoute {
                 // this.ConversationService.getUsersConversations(userID).then(data => {
                 //     res.json(data);
                 // });
-            }).post((req, res) => {
-                console.log(req, res);
             })
+            // .post((req, res) => {
+            //     console.log(req, res);
+            // })
 
         this.router.route("/create")
             .post((req, res) => {
