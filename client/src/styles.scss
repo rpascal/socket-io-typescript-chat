@@ -7,9 +7,9 @@
 @include bootstrap-theme-variables($fe-app-theme);
 /*Font Awesome*/
 
-$fa-font-path: "../node_modules/font-awesome/fonts";
-@import "../node_modules/font-awesome/scss/font-awesome.scss";
-@import "../node_modules/bootstrap/scss/bootstrap";
+$fa-font-path: "~font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome';
+@import "~bootstrap/scss/bootstrap";
 /*Bootstrap end*/
 
 /*Custom Start*/
