@@ -11,7 +11,7 @@ import { ConversationService } from '../shared/services/conversations/conversati
 })
 export class ChatRoomsComponent implements OnInit {
 
-  private conversations;
+  public conversations;
 
   constructor(public dialog: MatDialog, private Conversations: ConversationService) { }
 
