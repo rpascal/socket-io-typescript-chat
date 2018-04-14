@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker-compose up --buil server dbpostgres
+sudo docker-compose up --build server dbpostgres

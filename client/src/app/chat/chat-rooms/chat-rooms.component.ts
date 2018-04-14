@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../shared/services/user/user.service';
 import { MatDialog } from '@angular/material';
 import { CreateChatRoomComponent } from './create-chat-room/create-chat-room.component';
+import { ConversationService } from '../shared/services/conversations/conversation.service';
 
 @Component({
   selector: 'tcc-chat-rooms',
@@ -10,13 +11,13 @@ import { CreateChatRoomComponent } from './create-chat-room/create-chat-room.com
 })
 export class ChatRoomsComponent implements OnInit {
 
-  constructor(public dialog: MatDialog) { }
+  private conversations;
+
+  constructor(public dialog: MatDialog, private Conversations: ConversationService) { }
 
   ngOnInit() {
-    // this.userService.getAll().subscribe(data => {
-    //   console.log("got into user service get", data)
-    // })
-
+    this.conversations = this.Conversations.monitorConversations();
+    this.Conversations.init();
   }
 
   createRoom(): void {

@@ -50,7 +50,7 @@ export class UserService {
         };
         try {
             const queryRes = await this.BasePostgres.query(query);
-            console.log("auth", queryRes.rowCount)
+            // console.log("auth", queryRes.rowCount)
             if (queryRes.rowCount > 0)
                 return (queryRes.rows[0] as UserModel);
             return false;
@@ -98,7 +98,7 @@ export class UserService {
         };
         try {
             const queryRes = await this.BasePostgres.query(query);
-            console.log("insert good")
+            // console.log("insert good")
 
             return true
         } catch (err) {

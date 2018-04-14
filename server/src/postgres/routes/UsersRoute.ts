@@ -25,7 +25,6 @@ export class UsersRoute {
                     if (instanceOfUserModel(authedUser)) {
                         if (bcrypt.compareSync(req.body.password, authedUser.password)) {
                             authedUser.token = jwt.sign({ sub: authedUser.id }, AppConfig.secret);
-                            console.log("pre send")
                             res.send(authedUser);
                             return;
                         }

@@ -120,6 +120,7 @@ export class ChatServer {
 
     private sockets(): void {
         this.io = socketIo(this.server);
+        this.ConversationsRoute.setIO(this.io);
     }
 
     public listen(): void {
@@ -131,8 +132,9 @@ export class ChatServer {
             // handle server error here
             console.log('Error connecting to server');
         });
-        this.io.on('connect', (socket: any) => {
 
+        this.io.on('connect', (socket: SocketIO.Socket) => {
+            this.ConversationsRoute.setSocket(socket);
 
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: MessageModel) => {

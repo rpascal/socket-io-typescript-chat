@@ -12,7 +12,8 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatSnackBarModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatRippleModule
 } from '@angular/material';
 
 @NgModule({
@@ -29,6 +30,7 @@ import {
     MatToolbarModule,
     MatSnackBarModule,
     MatCheckboxModule,
+    MatRippleModule,
   ],
   exports: [
     MatButtonModule,
@@ -42,6 +44,7 @@ import {
     MatToolbarModule,
     MatSnackBarModule,
     MatCheckboxModule,
+    MatRippleModule,
   ],
   declarations: [],
   providers: [

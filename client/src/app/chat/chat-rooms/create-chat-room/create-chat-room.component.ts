@@ -6,6 +6,7 @@ import { UserService } from '../../../shared/services/user/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ConversationService } from '../../shared/services/conversations/conversation.service';
 import { ConversationExpandedModel } from '../../shared/model/conversation';
+import { AlertService } from '../../../shared/services/alert/alert.service';
 @Component({
   selector: 'tcc-create-chat-room',
   templateUrl: './create-chat-room.component.html',
@@ -16,12 +17,13 @@ export class CreateChatRoomComponent implements OnInit {
   users: Observable<User[]>;
   selectedUser: any;
   form: FormGroup;
-
+  loading = false;
 
   constructor(public dialogRef: MatDialogRef<CreateChatRoomComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userService: UserService,
-    private conversationService: ConversationService) { }
+    private conversationService: ConversationService,
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.users = this.userService.getAll();
@@ -35,16 +37,17 @@ export class CreateChatRoomComponent implements OnInit {
   }
 
   create() {
+    this.loading = true;
     const convoModel = Object.assign({ creator_id: this.userService.getLoggedInUser().id }, this.form.value);
     const model: ConversationExpandedModel = convoModel as ConversationExpandedModel;
-    console.log(this.userService.getLoggedInUser())
-    // model.creator_id = this.userService.getLoggedInUser().id;
-
     this.conversationService.create(model).subscribe(() => {
-      console.log("CREATED");
+      this.alertService.success('Room Created');
+      this.loading = false;
+      this.dialogRef.close();
+    }, error => {
+      this.alertService.error(error);
+      this.loading = false;
     });
-
-    // console.log(this.form.value);
   }
 
   onNoClick(): void {

@@ -4,4 +4,10 @@
       <button mat-raised-button color="primary" (click)="createRoom()">New Chat Room</button>
     </div>
   </div>
+
+  <mat-card *ngFor="let convo of conversations | async" matRipple>
+        {{ convo.title }}
+  </mat-card>
+
+
 </div>

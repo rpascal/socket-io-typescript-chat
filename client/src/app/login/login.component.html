@@ -1,9 +1,10 @@
-<mat-card>
+<mat-card class="cardCenter">
   <mat-card-title>Login</mat-card-title>
   <mat-card-content>
     <ngx-loading [show]="loading"></ngx-loading>
     <form [formGroup]="loginForm">
-      <mat-input-container [ngClass]="{'error': loginForm.controls['username'].errors && !loginForm.controls['username'].pristine}" dividerColor="{{loginForm.controls['username'].errors && !loginForm.controls['username'].pristine ? 'warn' : 'primary'}}">
+      <mat-input-container [ngClass]="{'error': loginForm.controls['username'].errors && !loginForm.controls['username'].pristine}"
+        dividerColor="{{loginForm.controls['username'].errors && !loginForm.controls['username'].pristine ? 'warn' : 'primary'}}">
         <input type="username" matInput formControlName="username" placeholder="username" required>
         <div *ngIf="loginForm.controls['username'].errors && !loginForm.controls['username'].pristine" class="error-msg">
           <div [hidden]="!loginForm.controls['username'].errors.required">username is required.</div>

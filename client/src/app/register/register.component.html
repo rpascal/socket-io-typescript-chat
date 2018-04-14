@@ -1,7 +1,7 @@
-<mat-card>
+<mat-card class="cardCenter">
   <mat-card-title>Register</mat-card-title>
   <mat-card-content>
-      <ngx-loading [show]="loading"></ngx-loading>
+    <ngx-loading [show]="loading"></ngx-loading>
     <form [formGroup]="registerForm">
       <mat-input-container [ngClass]="{'error': registerForm.controls['username'].errors && !registerForm.controls['username'].pristine}"
         dividerColor="{{registerForm.controls['username'].errors && !registerForm.controls['username'].pristine ? 'warn' : 'primary'}}">

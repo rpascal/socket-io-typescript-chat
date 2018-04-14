@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "~5.0.0",
     "@angular/router": "~5.0.0",
     "@ng-select/ng-select": "^0.36.0",
+    "@types/lodash": "^4.14.106",
     "bootstrap": "^4.1.0",
     "core-js": "~2.4.1",
     "dockerode": "^2.5.4",
