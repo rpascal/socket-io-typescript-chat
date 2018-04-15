@@ -5,7 +5,7 @@
     </div>
   </div>
 
-  <mat-card *ngFor="let convo of conversations | async" matRipple>
+  <mat-card class="pointer" *ngFor="let convo of conversations | async" matRipple (click)="enterChat(convo)">
         {{ convo.title }}
   </mat-card>
 

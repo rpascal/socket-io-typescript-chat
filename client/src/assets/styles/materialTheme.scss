@@ -22,7 +22,7 @@ $fe-app-theme: mat-light-theme($fe-app-primary, $fe-app-accent, $fe-app-warn);
     font-size:15px;
 }
 
-mat-card {
+mat-card:not(.chatCard) {
   max-width: 80%;
   margin: 2em auto;
   text-align: center;

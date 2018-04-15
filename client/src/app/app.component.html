@@ -10,7 +10,8 @@
 </mat-toolbar>
 <mat-sidenav-container fullscreen style="margin-top: 60px !important;">
   <mat-sidenav #sidenav class="sidenav">
-    <h4 class="subheader" (click)="logout()"> Logout</h4>
+    <h4 class="subheader pointer" (click)="logout()"> Logout</h4>
+    <h4 class="subheader pointer" routerLink="/"> Chat Rooms</h4>
   </mat-sidenav>
   <div class="content" style="margin-top: 5px;">
     <router-outlet></router-outlet>
