@@ -6,27 +6,65 @@ import { injectable, inject } from "inversify";
 import { TYPES } from "../../_config/inversifyTypes";
 import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
-import { ConversationService } from "../models/conversation";
-
+import { ConversationService, ConversationExpandedModel } from "../models/conversation";
+import { Subject } from "rxjs/Subject";
 
 @injectable()
 export class ConversationsRoute {
     private router: Router = express.Router();
+    private socket: SocketIO.Socket;
+    private io: SocketIO.Server;
+    
+    private added: Subject<number[]> = new Subject<number[]>();
     @inject(TYPES.ConversationService) private ConversationService: ConversationService;
 
     public getRoute(): Router {
-        
-        this.router.route("/")
-            .get((req: Request, res: Response) => {
-                this.ConversationService.getAll().then(data => {
-                    res.json(data);
-                });
-            }).post((req, res) => {
-                console.log(req, res);
+
+        this.router.route("/:userID")
+            .get(async (req: Request, res: Response) => {
+                const userID: number = +req.params.userID;
+
+                try {
+                    const conversations = await this.ConversationService.getUsersConversations(userID);
+                    res.json(conversations);
+                    return;
+                } catch (err) {
+                    res.status(400).send(err);
+                    return;
+                }
             })
 
 
+        this.router.route("/create")
+            .post(async (req, res) => {
+                const bodyModel: ConversationExpandedModel = req.body as ConversationExpandedModel;
+
+                try {
+                    await this.ConversationService.create(bodyModel);
+                    this.io.emit('conversationAdded', bodyModel.users);
+                    res.json(true);
+                    return;
+                } catch (err) {
+                    res.status(400).send(err);
+                    return;
+                }
+            })
+
         return this.router;
     }
+
+    public setIO(io: SocketIO.Server) {
+        this.io = io;
+    }
+
+    public setSocket(socket: SocketIO.Socket) {
+        this.socket = socket;
+    }
+
+    public monitorAdded() {
+        return this.added;
+    }
+
+
 
 }

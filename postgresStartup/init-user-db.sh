@@ -27,7 +27,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
         type       TEXT      NOT NULL
     );
 
-
     CREATE TABLE IF NOT EXISTS messages (
         id          SERIAL PRIMARY KEY,
         conversation_id INT REFERENCES conversation(id) ON DELETE RESTRICT,
@@ -37,9 +36,17 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
         created_at timestamp NOT NULL DEFAULT current_timestamp
     );
 
-
+    CREATE TABLE IF NOT EXISTS conversationusers (
+        conversation_id INT REFERENCES conversation(id) ON DELETE RESTRICT,
+        user_id INT REFERENCES users(id) ON DELETE RESTRICT
+    );
 
     GRANT ALL PRIVILEGES ON DATABASE docker TO docker;
     GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO docker;
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO docker;
+
+    INSERT INTO messageType (id,type) VALUES (1, 'message');
+    INSERT INTO messageType (id,type) VALUES (1, 'joined');
+    INSERT INTO messageType (id,type) VALUES (1, 'left');
+
 EOSQL

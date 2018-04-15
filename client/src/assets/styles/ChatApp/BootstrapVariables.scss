@@ -1,0 +1,9 @@
+/*********OMS Bootstrap variables (import above bootstap scss loaded in styles.scss)************/
+
+@import '~@angular/material/theming';
+@mixin bootstrap-theme-variables($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $theme-colors: ( "oms": mat-color($primary, darker)) !global;
+}

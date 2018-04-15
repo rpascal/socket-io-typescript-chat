@@ -2,7 +2,6 @@ import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-
 import { Client } from 'pg';
 import { injectable, inject } from "inversify";
 import { TYPES } from "./_config/inversifyTypes";
@@ -120,6 +119,9 @@ export class ChatServer {
 
     private sockets(): void {
         this.io = socketIo(this.server);
+        this.ConversationsRoute.setIO(this.io);
+        this.MessagesRoute.setIO(this.io);
+
     }
 
     public listen(): void {
@@ -131,18 +133,26 @@ export class ChatServer {
             // handle server error here
             console.log('Error connecting to server');
         });
-        this.io.on('connect', (socket: any) => {
 
+        this.io.on('connect', (socket: SocketIO.Socket) => {
+            this.ConversationsRoute.setSocket(socket);
+            this.MessagesRoute.setSocket(socket);
+
+            socket.on('room', function (room) {            
+                socket.leave(room);
+                socket.join(room);
+                socket.emit("joinedRoom");
+            });
 
             console.log('Connected client on port %s.', this.port);
-            socket.on('message', (m: MessageModel) => {
-                console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
-            });
+            // socket.on('message', (m: MessageModel) => {
+            //     console.log('[server](message): %s', JSON.stringify(m));
+            //     this.io.emit('message', m);
+            // });
 
-            socket.on('disconnect', () => {
-                console.log('Client disconnected');
-            });
+            // socket.on('disconnect', () => {
+            //     console.log('Client disconnected');
+            // });
         });
     }
 

@@ -1,0 +1,30 @@
+// @import "../OMSVariables.scss";
+@import '~@angular/material/theming';
+@mixin material-custom-styles($theme) {
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+    .side-menu li:hover {
+        background-color: mat-color($primary) !important;
+    }
+    .menuHeading {
+        background-color: mat-color($primary, darker) !important;
+        color: white !important;
+    }
+    .side-menu li.active a {
+        color: mat-color($primary, darker) !important;
+    }
+    .side-menu li a:hover {
+        color: white !important;
+    }
+    mat-sidenav {
+        background-color: #e0dddd !important;
+    }
+    .mat-form-field {
+        display: inline !important;
+    }
+    .cardCenter {
+        width: 80% !important;
+        margin: 0 auto !important;
+    }
+}

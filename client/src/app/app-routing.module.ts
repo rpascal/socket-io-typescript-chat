@@ -12,6 +12,7 @@ const routes: Routes = [
 
   // }
   { path: '', component: ChatRoomsComponent, canActivate: [AuthGuard] },
+  { path: 'chat/:conversationID', component: ChatComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 ];

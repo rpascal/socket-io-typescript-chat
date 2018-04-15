@@ -44,5 +44,19 @@ export class BasePostgres {
         }
     }
 
+    async transaction(func: (client: PoolClient) => Promise<void>): Promise<void> {
+        try {
+            const client = await this.getPoolClient();
+            //const queryRes = await client.query(query);
+            await client.query('BEGIN')
+            await func(client);
+            await client.query('COMMIT')
+            client.release();
+            return;// queryRes;
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    }
+
 
 }

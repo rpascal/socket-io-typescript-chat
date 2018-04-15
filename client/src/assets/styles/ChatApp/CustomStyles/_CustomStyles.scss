@@ -1,0 +1,13 @@
+//import at bottom of styles.scss
+@import "./bootstrap.scss";
+@import "./material.scss";
+@import '~@angular/material/theming';
+@mixin custom-styles($theme) {
+    @include bootstrap-custom-styles($theme);
+    @include material-custom-styles($theme);
+    .AlignCenterFlex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

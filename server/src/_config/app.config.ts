@@ -6,7 +6,8 @@ export const AppConfig: IAppConfig = {
     users: "users",
     conversation: "conversation",
     messages: "messages",
-    messageType: "messageType"
+    messageType: "messageType",
+    conversationusers: "conversationusers"
   },
   secret: "SECRET"
 };
@@ -21,6 +22,7 @@ interface ITables {
   conversation: string;
   messageType: string;
   messages: string;
+  conversationusers:string;
 
 }
 

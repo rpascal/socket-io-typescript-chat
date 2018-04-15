@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../shared/services/user/user.service';
+import { MatDialog } from '@angular/material';
+import { CreateChatRoomComponent } from './create-chat-room/create-chat-room.component';
+import { ConversationService } from '../shared/services/conversations/conversation.service';
+import { ConversationModel } from '../shared/model/conversation';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'tcc-chat-rooms',
@@ -8,12 +14,31 @@ import { UserService } from '../../shared/services/user/user.service';
 })
 export class ChatRoomsComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  public conversations;
+
+  constructor(public dialog: MatDialog,
+    private Conversations: ConversationService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.userService.getAll().subscribe(data => {
-      console.log("got into user service get", data)
-    })
+    this.conversations = this.Conversations.monitorConversations();
+    this.Conversations.init();
+  }
+
+  createRoom(): void {
+    const dialogRef = this.dialog.open(CreateChatRoomComponent, {
+      width: "500px",
+      height: "500px"
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
+
+  enterChat(convo: ConversationModel) {
+    this.router.navigate(['chat', convo.id]);
+    console.log(convo)
   }
 
 }

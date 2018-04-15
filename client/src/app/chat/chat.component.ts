@@ -3,14 +3,12 @@ import { MatDialog, MatDialogRef, MatList, MatListItem } from '@angular/material
 
 import { Action } from './shared/model/action';
 import { Event } from './shared/model/event';
-import { Message } from './shared/model/message';
+import { Message, MessageExpandedModel } from './shared/model/message';
 import { User } from './shared/model/user';
 import { SocketService } from './shared/services/socket.service';
-import { DialogUserComponent } from './dialog-user/dialog-user.component';
-import { DialogUserType } from './dialog-user/dialog-user-type';
+import { UserService } from '../shared/services/user/user.service';
+import { ActivatedRoute } from '@angular/router';
 
-
-const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 
 @Component({
   selector: 'tcc-chat',
@@ -20,17 +18,10 @@ const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 export class ChatComponent implements OnInit, AfterViewInit {
   action = Action;
   user: User;
-  messages: Message[] = [];
+  messages: MessageExpandedModel[] = [];
   messageContent: string;
   ioConnection: any;
-  dialogRef: MatDialogRef<DialogUserComponent> | null;
-  defaultDialogUserParams: any = {
-    disableClose: true,
-    data: {
-      title: 'Welcome',
-      dialogType: DialogUserType.NEW
-    }
-  };
+
 
   // getting a reference to the overall list, which is the parent container of the list items
   @ViewChild(MatList, { read: ElementRef }) matList: ElementRef;
@@ -38,15 +29,19 @@ export class ChatComponent implements OnInit, AfterViewInit {
   // getting a reference to the items/messages within the list
   @ViewChildren(MatListItem, { read: ElementRef }) matListItems: QueryList<MatListItem>;
 
+  conversationID: number;
+
   constructor(private socketService: SocketService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private userService: UserService,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.initModel();
-    // Using timeout due to https://github.com/angular/angular/issues/14748
-    setTimeout(() => {
-      this.openUserPopup(this.defaultDialogUserParams);
-    }, 0);
+    this.user = this.userService.getLoggedInUser();
+    this.route.params.take(1).subscribe(params => {
+      this.conversationID = params.conversationID;
+      this.initIoConnection();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -65,15 +60,42 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private initModel(): void {
-    const randomId = this.getRandomId();
-    this.user = {
-      id: randomId
-    };
-  }
+
 
   private initIoConnection(): void {
-    this.socketService.initSocket();
+    this.socketService.initSocket(this.conversationID).then(() => {
+
+      this.socketService.getOld(this.conversationID).subscribe((data: MessageExpandedModel[]) => {
+        this.messages = data;
+        console.log("Loaded old messages")
+      })
+
+      this.socketService.currentMessages()
+        .subscribe((message: MessageExpandedModel[]) => {
+          console.log("currentMessages looping", message);
+          message.forEach(item => {
+            this.messages.push(item);
+          })
+        });
+
+      this.ioConnection = this.socketService.onMessage()
+        .subscribe((message: MessageExpandedModel) => {
+          console.log("On Message");
+          this.messages.push(message);
+        });
+
+
+      this.socketService.onEvent(Event.CONNECT)
+        .subscribe(() => {
+          console.log('connected');
+        });
+
+      this.socketService.onEvent(Event.DISCONNECT)
+        .subscribe(() => {
+          console.log('disconnected');
+        });
+
+    });
 
     // this.socketService.onEvent(Event.DataLoaded)
     // .subscribe((message: Message) => {
@@ -81,93 +103,41 @@ export class ChatComponent implements OnInit, AfterViewInit {
     //   this.messages.push(message);
     // });
 
-    this.socketService.currentMessages()
-      .subscribe((message: Message[]) => {
-        console.log("currentMessages looping", message);
-        message.forEach(item => {
-          this.messages.push(item);
-        })
-      });
-
-    this.ioConnection = this.socketService.onMessage()
-      .subscribe((message: Message) => {
-        console.log("On Message");
-        this.messages.push(message);
-      });
-
-
-    this.socketService.onEvent(Event.CONNECT)
-      .subscribe(() => {
-        console.log('connected');
-      });
-
-    this.socketService.onEvent(Event.DISCONNECT)
-      .subscribe(() => {
-        console.log('disconnected');
-      });
   }
 
-  private getRandomId(): number {
-    return Math.floor(Math.random() * (1000000)) + 1;
-  }
 
-  public onClickUserInfo() {
-    this.openUserPopup({
-      data: {
-        username: this.user.username,
-        title: 'Edit Details',
-        dialogType: DialogUserType.EDIT
-      }
-    });
-  }
-
-  private openUserPopup(params): void {
-    this.dialogRef = this.dialog.open(DialogUserComponent, params);
-    this.dialogRef.afterClosed().subscribe(paramsDialog => {
-      if (!paramsDialog) {
-        return;
-      }
-
-      this.user.username = paramsDialog.username;
-      if (paramsDialog.dialogType === DialogUserType.NEW) {
-        this.initIoConnection();
-        this.sendNotification(paramsDialog, Action.JOINED);
-      } else if (paramsDialog.dialogType === DialogUserType.EDIT) {
-        this.sendNotification(paramsDialog, Action.RENAME);
-      }
-    });
-  }
 
   public sendMessage(message: string): void {
     if (!message) {
       return;
     }
 
-    this.socketService.send({
-      from: this.user,
-      content: message
+    const newMessage: MessageExpandedModel = {
+      message: message,
+      conversation_id: this.conversationID,
+      sender_id: this.user.id,
+      message_type: 1
+    }
+
+    this.socketService.sendNew(newMessage).subscribe(() => {
+      console.log("Message sent good")
+
+    }, err => {
+      console.log("error sending messgae", err)
     });
     this.messageContent = null;
   }
 
-  public sendNotification(params: any, action: Action): void {
-    let message: Message;
+  // public sendNotification(params: any, action: Action): void {
+  //   let message: Message;
 
-    if (action === Action.JOINED) {
-      message = {
-        from: this.user,
-        action: action
-      }
-    } else if (action === Action.RENAME) {
-      message = {
-        action: action,
-        content: {
-          username: this.user.username,
-          previousUsername: params.previousUsername
-        }
-      };
-    }
+  //   if (action === Action.JOINED) {
+  //     message = {
+  //       from: this.user,
+  //       action: action
+  //     }
+  //   }
 
-    this.socketService.send(message);
-  }
+  //   this.socketService.send(message);
+  // }
 }

@@ -5,13 +5,27 @@ import { environment } from '../../../../environments/environment';
 import { User } from '../../../chat/shared/model/user';
 import { take } from "rxjs/operators/take"
 import 'rxjs/add/operator/take';
+import * as _ from "lodash"
 
 @Injectable()
 export class UserService {
     constructor(private http: HttpClient) { }
 
-    getAll() {
-        return this.http.get<User[]>(environment.apiRoute + '/users').take(1);
+    getLoggedInUser(): User {
+        const curUser = localStorage.getItem('currentUser') || "";
+        if (curUser.length === 0) {
+            return {};
+        }
+        return JSON.parse(curUser) as User;
+    }
+
+    getAll(removeCurrent: boolean = true) {
+        const user = this.getLoggedInUser();
+        return this.http.get<User[]>(environment.apiRoute + '/users').take(1).map(res => {
+            return res.filter(item => {
+                return item.id !== user.id;
+            })
+        });
     }
 
     getById(_id: string) {
