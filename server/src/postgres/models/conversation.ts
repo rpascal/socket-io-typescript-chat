@@ -4,7 +4,7 @@ import { TYPES } from "../../_config/inversifyTypes";
 import { BasePostgres } from "../base";
 import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
-import { UserViewModel } from "./users";
+import { UserViewModel, UserService, UserModel } from "./users";
 import * as _ from "lodash";
 
 export interface ConversationModel {
@@ -22,6 +22,9 @@ export interface ConversationExpandedModel extends ConversationModel {
 @injectable()
 export class ConversationService {
     @inject(TYPES.BasePostgres) private BasePostgres: BasePostgres;
+    @inject(TYPES.UserService) private UserService: UserService;
+
+
 
     private readonly tableName: string = AppConfig.tables.conversation;
     private readonly userTableName: string = AppConfig.tables.users;
@@ -88,15 +91,26 @@ export class ConversationService {
 
     }
 
+    public async getUsersNotInConversation(ConversationID: number): Promise<UserViewModel[]> {
 
-    public async insert(Conversation: ConversationModel): Promise<boolean> {
         var query: QueryConfig = {
-            text: `INSERT INTO ${this.tableName} (title,creator_id,public) VALUES ($1, $2, $3)`,
-            values: [Conversation.title, Conversation.creator_id, Conversation.public]
+            text: `
+                SELECT 
+                    user_id
+                FROM ${this.conversationUsersTableName}
+                WHERE CU.conversation_id = ${ConversationID} 
+                `
         };
+
         try {
-            const queryRes = await this.BasePostgres.query(query);
-            return true
+
+            const users = await this.UserService.getAll();
+            const usersInConversation = await this.BasePostgres.query(query);
+            const data = usersInConversation.rows as number[];
+            return users.filter(x => {
+                return data.findIndex(y => y == x.id) == -1;
+            })
+
         } catch (err) {
             return Promise.reject(err);
         }
@@ -104,6 +118,34 @@ export class ConversationService {
     }
 
 
+    public async addUsers(ConversationID: number, userIds: number[]): Promise<boolean> {
+        try {
+            await this.BasePostgres.transaction(async (client) => {
+                await userIds.forEach(async userID => {
+                    var query: QueryConfig = {
+                        text: `INSERT INTO ${this.conversationUsersTableName} (conversation_id,user_id) VALUES ($1, $2)`,
+                        values: [ConversationID, userID]
+                    };
+                    await client.query(query);
+                })
+            })
 
+            return true
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    }
+
+    public async removeUser(ConversationID: number, userID: number): Promise<void> {
+        try {
+            var query: QueryConfig = {
+                text: `DELETE FROM ${this.conversationUsersTableName} WHERE conversation_id = $1 AND user_id = $2`,
+                values: [ConversationID, userID]
+            };
+            await this.BasePostgres.query(query);
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    }
 
 }
