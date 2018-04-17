@@ -5,9 +5,10 @@ import { Action } from './shared/model/action';
 import { Event } from './shared/model/event';
 import { Message, MessageExpandedModel } from './shared/model/message';
 import { User } from './shared/model/user';
-import { SocketService } from './shared/services/socket.service';
+import { ChatService } from './shared/services/chat.service';
 import { UserService } from '../shared/services/user/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChatSettingsComponent } from './chat-settings/chat-settings.component';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   messages: MessageExpandedModel[] = [];
   messageContent: string;
   ioConnection: any;
+  loading = false;
 
 
   // getting a reference to the overall list, which is the parent container of the list items
@@ -31,12 +33,13 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   conversationID: number;
 
-  constructor(private socketService: SocketService,
+  constructor(private chatService: ChatService,
     public dialog: MatDialog,
     private userService: UserService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.loading = true;
     this.user = this.userService.getLoggedInUser();
     this.route.params.take(1).subscribe(params => {
       this.conversationID = params.conversationID;
@@ -63,45 +66,40 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
 
   private initIoConnection(): void {
-    this.socketService.initSocket(this.conversationID).then(() => {
+    this.chatService.initSocket(this.conversationID).then(() => {
 
-      this.socketService.getOld(this.conversationID).subscribe((data: MessageExpandedModel[]) => {
+      this.chatService.getOld(this.conversationID).subscribe((data: MessageExpandedModel[]) => {
         this.messages = data;
-        console.log("Loaded old messages")
+        this.loading = false;
+        console.log("Loaded old messages", data)
       })
 
-      this.socketService.currentMessages()
-        .subscribe((message: MessageExpandedModel[]) => {
-          console.log("currentMessages looping", message);
-          message.forEach(item => {
-            this.messages.push(item);
-          })
-        });
-
-      this.ioConnection = this.socketService.onMessage()
+      // this.socketService.currentMessages()
+      //   .subscribe((message: MessageExpandedModel[]) => {
+      //     console.log("currentMessages looping", message);
+      //     message.forEach(item => {
+      //       this.messages.push(item);
+      //     })
+      //   });
+      // this.ioConnection =
+      this.chatService.onMessage()
         .subscribe((message: MessageExpandedModel) => {
-          console.log("On Message");
+          // console.log("On Message");
           this.messages.push(message);
         });
 
 
-      this.socketService.onEvent(Event.CONNECT)
-        .subscribe(() => {
-          console.log('connected');
-        });
+      // this.socketService.onEvent(Event.CONNECT)
+      //   .subscribe(() => {
+      //     console.log('connected');
+      //   });
 
-      this.socketService.onEvent(Event.DISCONNECT)
-        .subscribe(() => {
-          console.log('disconnected');
-        });
+      // this.socketService.onEvent(Event.DISCONNECT)
+      //   .subscribe(() => {
+      //     console.log('disconnected');
+      //   });
 
     });
-
-    // this.socketService.onEvent(Event.DataLoaded)
-    // .subscribe((message: Message) => {
-    //   console.log("On DataLoaded");
-    //   this.messages.push(message);
-    // });
 
   }
 
@@ -119,7 +117,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
       message_type: 1
     }
 
-    this.socketService.sendNew(newMessage).subscribe(() => {
+    this.chatService.sendNew(newMessage).subscribe(() => {
       console.log("Message sent good")
 
     }, err => {
@@ -128,16 +126,20 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.messageContent = null;
   }
 
-  // public sendNotification(params: any, action: Action): void {
-  //   let message: Message;
 
-  //   if (action === Action.JOINED) {
-  //     message = {
-  //       from: this.user,
-  //       action: action
-  //     }
-  //   }
+  openSettings() {
 
-  //   this.socketService.send(message);
-  // }
+    const dialogRef = this.dialog.open(ChatSettingsComponent, {
+      width: "500px",
+      height: "500px",
+      data: this.conversationID
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+
+    // alert("open settings")
+  }
+
 }

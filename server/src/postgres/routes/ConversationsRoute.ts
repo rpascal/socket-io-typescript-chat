@@ -8,6 +8,7 @@ import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
 import { ConversationService, ConversationExpandedModel } from "../models/conversation";
 import { Subject } from "rxjs/Subject";
+import { MessageExpandedModel } from "../models/messages";
 
 @injectable()
 export class ConversationsRoute {
@@ -54,7 +55,8 @@ export class ConversationsRoute {
             .post(async (req, res) => {
                 const bodyModel = req.body;
                 try {
-                    await this.ConversationService.addUsers(bodyModel.conversationID, bodyModel.users);
+                   await this.ConversationService.addUsers(this.io, bodyModel.conversationID, bodyModel.userIDs);
+
                     res.json(true);
                     return;
                 } catch (err) {
@@ -83,7 +85,10 @@ export class ConversationsRoute {
             .post(async (req, res) => {
                 const bodyModel = req.body;
                 try {
-                    await this.ConversationService.removeUser(bodyModel.conversationID, bodyModel.userID);
+                    const newMessage: MessageExpandedModel = await this.ConversationService.removeUser(bodyModel.conversationID, bodyModel.userID);
+
+                    this.io.in(bodyModel.conversationID).emit('message', newMessage);
+
                     res.json(true);
                     return;
                 } catch (err) {

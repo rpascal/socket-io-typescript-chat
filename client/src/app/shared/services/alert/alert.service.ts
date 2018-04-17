@@ -12,11 +12,11 @@ export class AlertService {
   }
 
   success(message: string) {
-    this.snacker.open(message, 'Login Success', { duration: 4000, extraClasses: ["successSnackBar"] });
+    this.snacker.open(message, '', { duration: 4000, extraClasses: ["successSnackBar"] });
   }
 
   error(message: string) {
-    this.snacker.open(message, 'Login Error', { duration: 4000, extraClasses: ["errorSnackBar"] });
+    this.snacker.open(message, '', { duration: 4000, extraClasses: ["errorSnackBar"] });
   }
 
 }

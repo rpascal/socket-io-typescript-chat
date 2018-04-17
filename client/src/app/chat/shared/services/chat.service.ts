@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 @Injectable()
-export class SocketService {
+export class ChatService {
     private socket: SocketIOClient.Socket;
 
     constructor(private http: HttpClient) {
@@ -37,29 +37,29 @@ export class SocketService {
         return this.http.post(environment.apiRoute + `/messages/${message.conversation_id}`, message).take(1);
     }
 
-    public send(message: MessageExpandedModel): void {
-        console.log("Sending message");
-        this.socket.emit('message', message);
-    }
+    // public send(message: MessageExpandedModel): void {
+    //     console.log("Sending message");
+    //     this.socket.emit('message', message);
+    // }
 
     public onMessage(): Observable<MessageExpandedModel> {
         return new Observable<MessageExpandedModel>(observer => {
-            console.log("onMessage in observable");
+            // console.log("onMessage in observable");
             this.socket.on('message', (data: MessageExpandedModel) => observer.next(data));
         });
     }
 
-    public currentMessages(): Observable<MessageExpandedModel[]> {
-        return new Observable<MessageExpandedModel[]>(observer => {
-            console.log("currentMessages in observable");
-            this.socket.on('currentMessages', (data: MessageExpandedModel[]) => observer.next(data));
-        });
-    }
+    // public currentMessages(): Observable<MessageExpandedModel[]> {
+    //     return new Observable<MessageExpandedModel[]>(observer => {
+    //         console.log("currentMessages in observable");
+    //         this.socket.on('currentMessages', (data: MessageExpandedModel[]) => observer.next(data));
+    //     });
+    // }
 
 
-    public onEvent(event: Event): Observable<any> {
-        return new Observable<Event>(observer => {
-            this.socket.on(event, () => observer.next());
-        });
-    }
+    // public onEvent(event: Event): Observable<any> {
+    //     return new Observable<Event>(observer => {
+    //         this.socket.on(event, () => observer.next());
+    //     });
+    // }
 }

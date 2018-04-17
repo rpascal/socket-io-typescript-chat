@@ -6,6 +6,7 @@ import { QueryConfig, QueryResult } from "pg";
 import { AppConfig } from "../../_config/app.config";
 import { UserViewModel, UserService, UserModel } from "./users";
 import * as _ from "lodash";
+import { MessageService, MessageExpandedModel } from "./messages";
 
 export interface ConversationModel {
     id?: number;
@@ -23,6 +24,7 @@ export interface ConversationExpandedModel extends ConversationModel {
 export class ConversationService {
     @inject(TYPES.BasePostgres) private BasePostgres: BasePostgres;
     @inject(TYPES.UserService) private UserService: UserService;
+    @inject(TYPES.MessageService) private MessageService: MessageService;
 
 
 
@@ -79,8 +81,13 @@ export class ConversationService {
                             values: [rows[0].id, userID]
                         };
                         await client.query(query);
+                        const message = await this.MessageService.insert({ conversation_id: rows[0].id, message: '', message_type: 2, sender_id: userID })
+                        console.log("Message", message);
                     })
                 }
+
+
+
             })
 
             return;
@@ -98,7 +105,7 @@ export class ConversationService {
                 SELECT 
                     user_id
                 FROM ${this.conversationUsersTableName}
-                WHERE CU.conversation_id = ${ConversationID} 
+                WHERE conversation_id = ${ConversationID}
                 `
         };
 
@@ -106,9 +113,11 @@ export class ConversationService {
 
             const users = await this.UserService.getAll();
             const usersInConversation = await this.BasePostgres.query(query);
-            const data = usersInConversation.rows as number[];
-            return users.filter(x => {
-                return data.findIndex(y => y == x.id) == -1;
+            const data: number[] = _.map(usersInConversation.rows, x => {
+                return x.user_id
+            })
+            return _.filter(users, x => {
+                return !_.includes(data, x.id);
             })
 
         } catch (err) {
@@ -118,7 +127,7 @@ export class ConversationService {
     }
 
 
-    public async addUsers(ConversationID: number, userIds: number[]): Promise<boolean> {
+    public async addUsers(io: SocketIO.Server, ConversationID: number, userIds: number[]): Promise<void> {
         try {
             await this.BasePostgres.transaction(async (client) => {
                 await userIds.forEach(async userID => {
@@ -127,22 +136,24 @@ export class ConversationService {
                         values: [ConversationID, userID]
                     };
                     await client.query(query);
+                    const message = await this.MessageService.insert({ conversation_id: ConversationID, message: '', message_type: 2, sender_id: userID });
+                    io.in(ConversationID).emit('message', message);
                 })
             })
-
-            return true
         } catch (err) {
             return Promise.reject(err);
         }
     }
 
-    public async removeUser(ConversationID: number, userID: number): Promise<void> {
+    public async removeUser(ConversationID: number, userID: number): Promise<MessageExpandedModel> {
         try {
             var query: QueryConfig = {
                 text: `DELETE FROM ${this.conversationUsersTableName} WHERE conversation_id = $1 AND user_id = $2`,
                 values: [ConversationID, userID]
             };
             await this.BasePostgres.query(query);
+            return await this.MessageService.insert({ conversation_id: ConversationID, message: '', message_type: 3, sender_id: userID })
+
         } catch (err) {
             return Promise.reject(err);
         }

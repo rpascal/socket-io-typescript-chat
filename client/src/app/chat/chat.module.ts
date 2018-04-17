@@ -5,12 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material/material.module';
 
 import { ChatComponent } from './chat.component';
-import { SocketService } from './shared/services/socket.service';
-import { DialogUserComponent } from './dialog-user/dialog-user.component';
+import { ChatService } from './shared/services/chat.service';
 import { ChatRoomsComponent } from './chat-rooms/chat-rooms.component';
 import { CreateChatRoomComponent } from './chat-rooms/create-chat-room/create-chat-room.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ConversationService } from './shared/services/conversations/conversation.service';
+import { SharedModule } from '../shared/shared.module';
+import { ChatSettingsComponent } from './chat-settings/chat-settings.component';
 
 @NgModule({
   imports: [
@@ -18,10 +19,11 @@ import { ConversationService } from './shared/services/conversations/conversatio
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    NgSelectModule
+    NgSelectModule,
+    SharedModule
   ],
-  declarations: [ChatComponent, DialogUserComponent, ChatRoomsComponent, CreateChatRoomComponent],
-  providers: [SocketService, ConversationService],
-  entryComponents: [DialogUserComponent, CreateChatRoomComponent]
+  declarations: [ChatComponent, ChatRoomsComponent, CreateChatRoomComponent, ChatSettingsComponent],
+  providers: [ChatService, ConversationService],
+  entryComponents: [ChatComponent, ChatRoomsComponent, CreateChatRoomComponent, ChatSettingsComponent]
 })
 export class ChatModule { }

@@ -43,4 +43,8 @@ export class AppComponent implements OnInit {
     this.authenicationService.logout();
   }
 
+  closeMenu() {
+    this.sidenav.close();
+  }
+
 }

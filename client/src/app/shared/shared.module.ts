@@ -11,6 +11,10 @@ import { JwtInterceptorProvider } from "./interceptors/jwt.interceptor";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+
+import { NgbModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { PopoverModule } from "ng4-popover";
+
 @NgModule({
   imports: [
     CommonModule,
@@ -25,13 +29,17 @@ import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
       primaryColour: '#0000ff',
       secondaryColour: '#00ff00',
       tertiaryColour: '#ffffff'
-    })
+    }),
+    NgbModule.forRoot(),
+    PopoverModule,
   ],
   exports: [
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    LoadingModule
+    LoadingModule,
+    NgbModule,
+    PopoverModule
   ],
   providers: [
     AuthGuard,

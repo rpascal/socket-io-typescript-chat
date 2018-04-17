@@ -3,6 +3,7 @@
   <h1 mat-dialog-title>Create a Chat Room</h1>
 
   <mat-dialog-content>
+    <ngx-loading [show]="loading"></ngx-loading>
 
     <div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
       <div class="row" style="padding-bottom: 5px;">
@@ -24,13 +25,13 @@
             placeholder="Select Users" appendTo="body">
 
             <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
-              <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+              <div class="ng-value" *ngFor="let item of (items ? items.slice(0,3): [])">
                 <span class="ng-value-label">
                   {{item.username}}</span>
                 <span class="ng-value-icon right" (click)="clear(item); $event.stopPropagation()" aria-hidden="true">×</span>
               </div>
-              <div class="ng-value" *ngIf="items.length > 2">
-                <span class="ng-value-label">{{items.length - 2}} more...</span>
+              <div class="ng-value" *ngIf="items.length > 3">
+                <span class="ng-value-label">{{items.length - 3}} more...</span>
               </div>
             </ng-template>
 

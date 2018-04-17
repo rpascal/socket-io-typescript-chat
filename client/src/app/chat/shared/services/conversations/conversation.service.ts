@@ -11,6 +11,7 @@ import { Observable } from "rxjs/Observable";
 
 import * as _ from "lodash"
 import { Subject } from 'rxjs/Subject';
+import { User } from '../../model/user';
 
 @Injectable()
 export class ConversationService {
@@ -47,6 +48,24 @@ export class ConversationService {
 
     create(convo: ConversationExpandedModel) {
         return this.http.post(environment.apiRoute + '/conversations/create', convo).take(1);
+    }
+
+    addUsers(conversationID: number, userIDs: number[]) {
+        return this.http.post(environment.apiRoute + '/conversations/addUsers', {
+            conversationID: conversationID,
+            userIDs: userIDs
+        }).take(1);
+    }
+
+    getUsersNotInConversation(conversationID: number) {
+        return this.http.get<User[]>(environment.apiRoute + `/conversations/getUsersNotInConversation/${conversationID}`).take(1);
+    }
+
+    removeUser(conversationID: number, userID: number) {
+        return this.http.post(environment.apiRoute + '/conversations/removeUser', {
+            conversationID: conversationID,
+            userID: userID
+        }).take(1);
     }
 
     public monitorConversations() {

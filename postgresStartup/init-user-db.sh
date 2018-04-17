@@ -46,7 +46,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO docker;
 
     INSERT INTO messageType (id,type) VALUES (1, 'message');
-    INSERT INTO messageType (id,type) VALUES (1, 'joined');
-    INSERT INTO messageType (id,type) VALUES (1, 'left');
+    INSERT INTO messageType (id,type) VALUES (2, 'joined');
+    INSERT INTO messageType (id,type) VALUES (3, 'left');
 
 EOSQL
