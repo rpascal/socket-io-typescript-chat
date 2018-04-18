@@ -33,6 +33,7 @@
     "express": "~4.10.0",
     "font-awesome": "^4.7.0",
     "hammerjs": "~2.0.8",
+    "material-design-icons": "^3.0.1",
     "ng4-popover": "^1.0.23",
     "ngx-loading": "^1.0.14",
     "node-sass": "^4.8.3",

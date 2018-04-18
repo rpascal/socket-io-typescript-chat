@@ -11,7 +11,7 @@ import { MatSidenav } from '@angular/material';
 export class AppComponent implements OnInit {
 
   @ViewChild("sidenav") sidenav: MatSidenav;
-
+  loggedIn = false;
 
   constructor(private router: Router, private authenicationService: AuthenticationService) {
 
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.authenicationService.monitorUserState().subscribe(loggedOn => {
+      this.loggedIn = loggedOn;
       if (loggedOn) {
         console.log("Logged on");
       } else {
@@ -34,6 +35,11 @@ export class AppComponent implements OnInit {
       }
     })
 
+  }
+
+  toggleMenu() {
+    if (this.loggedIn)
+      this.sidenav.toggle();
   }
 
   private initModel(): void {

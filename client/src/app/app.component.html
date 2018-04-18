@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" layout="row" style="position: fixed;height: 60px;">
-  <button mat-icon-button class="menu-icon">
-    <mat-icon (click)="sidenav.toggle()" class="mat-24" aria-label="Menu">menu</mat-icon>
+  <button *ngIf="loggedIn" (click)="toggleMenu()" mat-icon-button class="menu-icon">
+    <mat-icon class="mat-24" aria-label="Menu">menu</mat-icon>
   </button>
   <span>
     <h2>Computer Networks</h2>
