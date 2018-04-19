@@ -56,7 +56,7 @@ export class ConversationsRoute {
                 const bodyModel = req.body;
                 try {
                    await this.ConversationService.addUsers(this.io, bodyModel.conversationID, bodyModel.userIDs);
-
+                   this.io.emit('conversationAdded', bodyModel.userIDs);
                     res.json(true);
                     return;
                 } catch (err) {
