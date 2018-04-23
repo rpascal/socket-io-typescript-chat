@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/take';
+
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 import { environment } from '../../../../environments/environment';
 import { User } from '../../../chat/shared/model/user';
-import { take } from "rxjs/operators/take"
-import 'rxjs/add/operator/take';
-import * as _ from "lodash"
 
 @Injectable()
 export class UserService {
@@ -14,7 +13,7 @@ export class UserService {
     getLoggedInUser(): User {
         const curUser = localStorage.getItem('currentUser') || "";
         if (curUser.length === 0) {
-            return {};
+            return undefined;
         }
         return JSON.parse(curUser) as User;
     }

@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthenticationService } from './shared/services/authentication/authentication.service';
-import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material';
+import { Router } from '@angular/router';
+
+import { AuthenticationService } from './shared/services/authentication/authentication.service';
 
 @Component({
   selector: 'tcc-root',
@@ -18,6 +19,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authenicationService.checkLoggedOn();
+
     this.authenicationService.monitorUserState().subscribe(loggedOn => {
       this.loggedIn = loggedOn;
       if (loggedOn) {

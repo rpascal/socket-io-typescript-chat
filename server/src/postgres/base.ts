@@ -1,6 +1,5 @@
-import { Client, Pool, PoolClient, QueryConfig, QueryResult } from 'pg';
-
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
+import { Pool, PoolClient, QueryConfig, QueryResult } from 'pg';
 
 @injectable()
 export class BasePostgres {

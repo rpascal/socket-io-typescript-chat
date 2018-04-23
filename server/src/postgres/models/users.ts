@@ -1,10 +1,11 @@
-
-import { injectable, inject } from "inversify";
-import { TYPES } from "../../_config/inversifyTypes";
-import { BasePostgres } from "../base";
-import { QueryConfig, QueryResult } from "pg";
-import { AppConfig } from "../../_config/app.config";
 import * as bcrypt from 'bcryptjs';
+import { inject, injectable } from 'inversify';
+import { QueryConfig } from 'pg';
+
+import { AppConfig } from '../../_config/app.config';
+import { TYPES } from '../../_config/inversifyTypes';
+import { BasePostgres } from '../base';
+
 
 
 export interface UserModel {

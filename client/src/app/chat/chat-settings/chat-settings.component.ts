@@ -1,11 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ConversationService } from '../shared/services/conversations/conversation.service';
-import { UserService } from '../../shared/services/user/user.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
 import { AlertService } from '../../shared/services/alert/alert.service';
-import { Observable } from "rxjs/Observable";
+import { UserService } from '../../shared/services/user/user.service';
 import { User } from '../shared/model/user';
+import { ConversationService } from '../shared/services/conversations/conversation.service';
 
 @Component({
   selector: 'tcc-chat-settings',

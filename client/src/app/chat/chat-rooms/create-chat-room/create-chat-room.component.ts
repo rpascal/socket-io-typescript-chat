@@ -1,12 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { User } from '../../shared/model/user';
-import { Observable } from "rxjs/Observable";
-import { UserService } from '../../../shared/services/user/user.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ConversationService } from '../../shared/services/conversations/conversation.service';
-import { ConversationExpandedModel } from '../../shared/model/conversation';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
+
 import { AlertService } from '../../../shared/services/alert/alert.service';
+import { UserService } from '../../../shared/services/user/user.service';
+import { ConversationExpandedModel } from '../../shared/model/conversation';
+import { User } from '../../shared/model/user';
+import { ConversationService } from '../../shared/services/conversations/conversation.service';
+
 @Component({
   selector: 'tcc-create-chat-room',
   templateUrl: './create-chat-room.component.html',

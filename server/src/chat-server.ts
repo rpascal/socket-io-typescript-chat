@@ -1,27 +1,22 @@
-import { createServer, Server } from 'http';
+import 'reflect-metadata';
+
+import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as express from 'express';
+import * as expressJwt from 'express-jwt';
+import { createServer, Server } from 'http';
+import { inject, injectable } from 'inversify';
 import * as socketIo from 'socket.io';
 
-import { Client } from 'pg';
-import { injectable, inject } from "inversify";
-import { TYPES } from "./_config/inversifyTypes";
-import { BasePostgres } from './postgres/base';
-
-import "reflect-metadata";
-import { UsersRoute } from './postgres/routes/UsersRoute';
-import { UserService } from './postgres/models/users';
-import { MessageService, MessageModel } from './postgres/models/messages';
-import { ConversationService } from './postgres/models/conversation';
-import { MessagesRoute } from './postgres/routes/MessagesRoute';
-import { ConversationsRoute } from './postgres/routes/ConversationsRoute';
-import { MessageTypesRoute } from './postgres/routes/MessageTypesRoute';
-import { Router } from 'express';
-
-import * as expressJwt from 'express-jwt';
 import { AppConfig } from './_config/app.config';
-
-import * as cors from 'cors';
-import * as  bodyParser from 'body-parser';
+import { TYPES } from './_config/inversifyTypes';
+import { BasePostgres } from './postgres/base';
+import { MessageService } from './postgres/models/messages';
+import { UserService } from './postgres/models/users';
+import { ConversationsRoute } from './postgres/routes/ConversationsRoute';
+import { MessagesRoute } from './postgres/routes/MessagesRoute';
+import { MessageTypesRoute } from './postgres/routes/MessageTypesRoute';
+import { UsersRoute } from './postgres/routes/UsersRoute';
 
 @injectable()
 export class ChatServer {
@@ -81,15 +76,7 @@ export class ChatServer {
         this.app.use("/api/messages", this.MessagesRoute.getRoute());
         this.app.use("/api/messageTypes", this.MessageTypesRoute.getRoute());
 
-        // const router: Router = express.Router();
 
-        // router.route("/")
-        //     .get((req, res) => {
-        //         res.send("HI api")
-        //     })
-
-
-        // this.app.use("/api", router);
         this.app.get("/", (err, res, next) => {
 
             this.MessageService.getAll(123456879).then(data => {

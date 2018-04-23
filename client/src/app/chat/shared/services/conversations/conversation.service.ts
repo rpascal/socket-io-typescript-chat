@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-import { take } from "rxjs/operators/take"
 import 'rxjs/add/operator/take';
-import { ConversationExpandedModel } from '../../model/conversation';
-import { UserService } from '../../../../shared/services/user/user.service';
-import { environment } from 'environments/environment';
-import { connect } from 'socket.io-client';
-import { Observable } from "rxjs/Observable";
 
-import * as _ from "lodash"
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
+import * as _ from 'lodash';
 import { Subject } from 'rxjs/Subject';
+import { connect } from 'socket.io-client';
+
+import { UserService } from '../../../../shared/services/user/user.service';
+import { ConversationExpandedModel } from '../../model/conversation';
 import { User } from '../../model/user';
 
 @Injectable()

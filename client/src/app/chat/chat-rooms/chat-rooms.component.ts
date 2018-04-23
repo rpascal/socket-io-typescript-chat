@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../shared/services/user/user.service';
 import { MatDialog } from '@angular/material';
-import { CreateChatRoomComponent } from './create-chat-room/create-chat-room.component';
-import { ConversationService } from '../shared/services/conversations/conversation.service';
-import { ConversationModel } from '../shared/model/conversation';
 import { Router } from '@angular/router';
+
+import { ConversationModel } from '../shared/model/conversation';
+import { ConversationService } from '../shared/services/conversations/conversation.service';
+import { CreateChatRoomComponent } from './create-chat-room/create-chat-room.component';
 
 
 @Component({

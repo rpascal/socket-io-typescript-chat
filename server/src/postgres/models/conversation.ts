@@ -1,12 +1,13 @@
+import { inject, injectable } from 'inversify';
+import * as _ from 'lodash';
+import { QueryConfig } from 'pg';
 
-import { injectable, inject } from "inversify";
-import { TYPES } from "../../_config/inversifyTypes";
-import { BasePostgres } from "../base";
-import { QueryConfig, QueryResult } from "pg";
-import { AppConfig } from "../../_config/app.config";
-import { UserViewModel, UserService, UserModel } from "./users";
-import * as _ from "lodash";
-import { MessageService, MessageExpandedModel } from "./messages";
+import { AppConfig } from '../../_config/app.config';
+import { TYPES } from '../../_config/inversifyTypes';
+import { BasePostgres } from '../base';
+import { MessageExpandedModel, MessageService } from './messages';
+import { UserService, UserViewModel } from './users';
+
 
 export interface ConversationModel {
     id?: number;
@@ -137,7 +138,7 @@ export class ConversationService {
                     };
                     await client.query(query);
                     const message = await this.MessageService.insert({ conversation_id: ConversationID, message: '', message_type: 2, sender_id: userID });
-                    io.in(ConversationID).emit('message', message);
+                    io.in(ConversationID.toString()).emit('message', message);
                 })
             })
         } catch (err) {

@@ -1,16 +1,18 @@
-import "reflect-metadata";
-import { Container } from "inversify";
-import { TYPES } from "./inversifyTypes";
-import { BasePostgres } from "../postgres/base";
-import { ChatServer } from "../chat-server";
-import { UsersRoute } from "../postgres/routes/UsersRoute";
-import { UserService } from "../postgres/models/users";
-import { MessageService } from "../postgres/models/messages";
-import { MessageTypeService } from "../postgres/models/messageType";
-import { ConversationService } from "../postgres/models/conversation";
-import { MessagesRoute } from "../postgres/routes/MessagesRoute";
-import { MessageTypesRoute } from "../postgres/routes/MessageTypesRoute";
-import { ConversationsRoute } from "../postgres/routes/ConversationsRoute";
+import 'reflect-metadata';
+
+import { Container } from 'inversify';
+
+import { ChatServer } from '../chat-server';
+import { BasePostgres } from '../postgres/base';
+import { ConversationService } from '../postgres/models/conversation';
+import { MessageService } from '../postgres/models/messages';
+import { MessageTypeService } from '../postgres/models/messageType';
+import { UserService } from '../postgres/models/users';
+import { ConversationsRoute } from '../postgres/routes/ConversationsRoute';
+import { MessagesRoute } from '../postgres/routes/MessagesRoute';
+import { MessageTypesRoute } from '../postgres/routes/MessageTypesRoute';
+import { UsersRoute } from '../postgres/routes/UsersRoute';
+import { TYPES } from './inversifyTypes';
 
 
 

@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { Message, MessageExpandedModel } from '../model/message';
-import { Event } from '../model/event';
-
-import { connect } from 'socket.io-client';
-import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs/Observable';
+import { connect } from 'socket.io-client';
+
+import { MessageExpandedModel } from '../model/message';
 
 
 @Injectable()

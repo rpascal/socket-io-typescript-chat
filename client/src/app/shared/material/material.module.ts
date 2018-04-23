@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import {
   MatButtonModule,
   MatCardModule,
+  MatCheckboxModule,
   MatDialog,
   MatDialogModule,
-  MatIconModule,
   MatFormFieldModule,
+  MatIconModule,
   MatInputModule,
   MatListModule,
+  MatRippleModule,
   MatSidenavModule,
-  MatToolbarModule,
   MatSnackBarModule,
-  MatCheckboxModule,
-  MatRippleModule
+  MatToolbarModule,
 } from '@angular/material';
 
 @NgModule({

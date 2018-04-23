@@ -1,20 +1,31 @@
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
+
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map'
 
 import { environment } from '../../../../environments/environment';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/take';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthenticationService {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private userService: UserService) { }
 
 
     private logonStatus = new BehaviorSubject<boolean>(false);
     private loggedOff = new BehaviorSubject<boolean>(false);
+
+
+
+    checkLoggedOn() {
+        console.log("inti 2")
+        if (this.userService.getLoggedInUser()) {
+            console.log("inti")
+            this.logonStatus.next(true);
+        }
+    }
 
 
     login(username: string, password: string) {

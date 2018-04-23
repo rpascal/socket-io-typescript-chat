@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthenticationService } from '../shared/services/authentication/authentication.service';
 import { AlertService } from '../shared/services/alert/alert.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AuthenticationService } from '../shared/services/authentication/authentication.service';
 
 @Component({
   selector: 'tcc-login',
@@ -58,20 +58,4 @@ export class LoginComponent implements OnInit {
         });
   }
 
-  // login() {
-  //   this.loading = true;
-  //   this.authenticationService.login(this.model.username, this.model.password)
-  //     .subscribe(
-  //       data => {
-  //         if (this.returnUrl === undefined || this.returnUrl == null || this.returnUrl === '') {
-  //           this.returnUrl = '/';
-  //         }
-  //         this.router.navigate([this.returnUrl]);
-  //       },
-  //       error => {
-  //         console.log("Error logging in");
-  //         this.alertService.error(error);
-  //         this.loading = false;
-  //       });
-  // }
 }

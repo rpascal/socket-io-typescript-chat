@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from '../shared/services/authentication/authentication.service';
-import { AlertService } from '../shared/services/alert/alert.service';
-import { UserService } from '../shared/services/user/user.service';
 import { User } from '../chat/shared/model/user';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AlertService } from '../shared/services/alert/alert.service';
+import { AuthenticationService } from '../shared/services/authentication/authentication.service';
+import { UserService } from '../shared/services/user/user.service';
 
 
 @Component({

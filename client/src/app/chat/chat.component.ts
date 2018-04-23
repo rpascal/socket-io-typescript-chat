@@ -1,14 +1,13 @@
-import { Component, OnInit, ViewChildren, ViewChild, AfterViewInit, QueryList, ElementRef } from '@angular/core';
-import { MatDialog, MatDialogRef, MatList, MatListItem } from '@angular/material';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { MatDialog, MatList, MatListItem } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
 
+import { UserService } from '../shared/services/user/user.service';
+import { ChatSettingsComponent } from './chat-settings/chat-settings.component';
 import { Action } from './shared/model/action';
-import { Event } from './shared/model/event';
-import { Message, MessageExpandedModel } from './shared/model/message';
+import { MessageExpandedModel } from './shared/model/message';
 import { User } from './shared/model/user';
 import { ChatService } from './shared/services/chat.service';
-import { UserService } from '../shared/services/user/user.service';
-import { ActivatedRoute } from '@angular/router';
-import { ChatSettingsComponent } from './chat-settings/chat-settings.component';
 
 
 @Component({
@@ -74,30 +73,10 @@ export class ChatComponent implements OnInit, AfterViewInit {
         console.log("Loaded old messages", data)
       })
 
-      // this.socketService.currentMessages()
-      //   .subscribe((message: MessageExpandedModel[]) => {
-      //     console.log("currentMessages looping", message);
-      //     message.forEach(item => {
-      //       this.messages.push(item);
-      //     })
-      //   });
-      // this.ioConnection =
       this.chatService.onMessage()
         .subscribe((message: MessageExpandedModel) => {
-          // console.log("On Message");
           this.messages.push(message);
         });
-
-
-      // this.socketService.onEvent(Event.CONNECT)
-      //   .subscribe(() => {
-      //     console.log('connected');
-      //   });
-
-      // this.socketService.onEvent(Event.DISCONNECT)
-      //   .subscribe(() => {
-      //     console.log('disconnected');
-      //   });
 
     });
 
